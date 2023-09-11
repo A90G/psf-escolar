@@ -1,1 +1,3 @@
-export class CreateProfesorDto {}
+export class CreateProfesorDto {
+    readonly apellidoNombre : string;
+}

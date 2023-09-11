@@ -1,34 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ProfesorService } from './profesor.service';
 import { CreateProfesorDto } from './dto/create-profesor.dto';
 import { UpdateProfesorDto } from './dto/update-profesor.dto';
+import { Profesor } from './entities/profesor.entity';
 
 @Controller('profesor')
 export class ProfesorController {
-  constructor(private readonly profesorService: ProfesorService) {}
 
-  @Post()
-  create(@Body() createProfesorDto: CreateProfesorDto) {
-    return this.profesorService.create(createProfesorDto);
-  }
+    constructor(private readonly profesorService: ProfesorService){}
 
-  @Get()
-  findAll() {
-    return this.profesorService.findAll();
-  }
+    @Get('raw')
+    async getAllRaw():Promise<Profesor[]>{
+        return await this.profesorService.findAllRaw();
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.profesorService.findOne(+id);
-  }
+    @Get('orm')
+    async getAllOrm():Promise<Profesor[]>{
+        return await this.profesorService.findAllOrm();
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProfesorDto: UpdateProfesorDto) {
-    return this.profesorService.update(+id, updateProfesorDto);
-  }
+    @Get(':id')
+    async getId(@Param('id')id:number) : Promise<Profesor>{
+        return await this.profesorService.findById(id);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.profesorService.remove(+id);
-  }
+    @Post('crear')
+    async crearProfesor(@Body() createProfesorDto:CreateProfesorDto):Promise<boolean>{
+        return this.profesorService.create(createProfesorDto);
+    }
+
+    @Put('actualizar/:id')
+    async actualizarProfesorId(@Body() createProfesorDto:CreateProfesorDto, @Param('id') id: number): Promise<String> {
+        return this.profesorService.update(createProfesorDto,id)
+    }
+
+    @Delete('eliminar/:id')
+    async eliminarProfesor(@Param('id')id:number) : Promise<Profesor>{
+        return await this.profesorService.delete(id);
+    }
 }
