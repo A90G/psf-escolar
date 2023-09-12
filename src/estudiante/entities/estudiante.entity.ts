@@ -13,8 +13,9 @@ export class Estudiante{
     @Column()
     fechaNacimiento: Date;
 
-    constructor(apellidoNombre:string){
+    constructor(apellidoNombre:string, fechaNacimiento: Date ){
         this.apellidoNombre = apellidoNombre
+        this.fechaNacimiento = fechaNacimiento;
     }
     public getId():number{
         return this.id;

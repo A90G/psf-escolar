@@ -25,7 +25,7 @@ export class EstudianteController {
     }
 
     @Post('crear')
-    async crearEstudiante(@Body() createProfesorDto:CreateProfesorDto):Promise<boolean>{
+    async crearEstudiante(@Body() createProfesorDto:CreateEstudianteDto):Promise<boolean>{
         return this.estudianteService.create(createProfesorDto);
     } // aquí me falta agregar la fecha de nacimiento en las actualizaciones o a las creaciones no?
 

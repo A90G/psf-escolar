@@ -19,7 +19,7 @@ export class EstudianteService {
 
     async create(createEstudianteDto : CreateEstudianteDto) : Promise<boolean>{
       try{
-          let estudiante : Estudiante = await this.estudianteRepository.save(new Estudiante(createEstudianteDto.apellidoNombre));//ACÁ FALTA DATETIME
+          let estudiante : Estudiante = await this.estudianteRepository.save(new Estudiante(createEstudianteDto.apellidoNombre, createEstudianteDto.fechaNacimiento));
           if(estudiante)
              return true;
          else
@@ -39,7 +39,7 @@ export class EstudianteService {
       let datos = await this.estudianteRepository.query("select * from estudiante");
 
       datos.forEach(element => {
-          let estudiante : Estudiante = new Estudiante(element['apellidoNombre']);//ACÁ FALTA DATETIME
+          let estudiante : Estudiante = new Estudiante(element.apellidoNombre, element.fechaNacimiento);
           this.estudiantes.push(estudiante)
       });
 
@@ -75,13 +75,18 @@ async findById(id :number) : Promise<Estudiante> {
     try{
         const criterio : FindOneOptions = { where : {id:id} }
         let estudiante : Estudiante = await this.estudianteRepository.findOne(criterio);
-        if(estudiante) // aquií llevaba ! y se lo saqué ver si queda biensin 
+        if(estudiante)
             throw new Error('no se pudo encontrar el estudiante a modificar ');
         else{
-            let antiguoEstudiante = estudiante.getapellidoNombre();
-            estudiante.setapellidoNombre(createEstudianteDto.apellidoNombre); // y  la datetime
+            let antiguoEstudiante = { 
+                apellidoNombre: estudiante.getapellidoNombre(),    
+            };
+            estudiante.setapellidoNombre(createEstudianteDto.apellidoNombre); 
+            estudiante.setfechaNacimiento(createEstudianteDto.fechaNacimiento);
+            // acá va un &&?? o cómo me aseguro que ambas condiciones se cumplen para update estudiante? porque en ningún lugar yo le puse que eran not null por ejemplo, mismo para el create o el delete
+
             estudiante = await this.estudianteRepository.save(estudiante);
-            return `OK - ${antiguoEstudiante} --> ${createEstudianteDto.apellidoNombre}`
+            return `OK - ${antiguoEstudiante.apellidoNombre} --> ${createEstudianteDto.apellidoNombre} (${createEstudianteDto.fechaNacimiento})`;
         }
     }
     catch(error){
@@ -98,7 +103,7 @@ async delete(id:number): Promise<any>{
       const criterio : FindOneOptions = { where : {id:id} }
       let estudiante : Estudiante = await this.estudianteRepository.findOne(criterio);
       if(estudiante)// aquií llevaba ! y se lo saqué ver si queda biensin 
-          throw new Error('no se eliminar estudiante ');
+          throw new Error('no se pudo eliminar estudiante ');
       else{
           await this.estudianteRepository.remove(estudiante);
           return { id:id,
