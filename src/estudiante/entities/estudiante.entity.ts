@@ -14,8 +14,8 @@ export class Estudiante{
     fechaNacimiento: Date;
 
     constructor(apellidoNombre:string, fechaNacimiento: Date ){
-        this.apellidoNombre = apellidoNombre
-        this.fechaNacimiento = fechaNacimiento;
+        this.apellidoNombre = apellidoNombre;
+        this.fechaNacimiento = fechaNacimiento
     }
     public getId():number{
         return this.id;
