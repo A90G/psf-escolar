@@ -14,7 +14,7 @@ export class CiudadService {
     private readonly ciudadRepository:Repository<Ciudad>
     ){}
 
-    async findAllRaw():Promise<Ciudad[]>{
+    async findAllRaw():Promise<CiudadDTO[]>{
         this.ciudades = [];
         let datos = await this.ciudadRepository.query("select * from ciudad");
 
@@ -26,14 +26,14 @@ export class CiudadService {
         return this.ciudades;
     }
 
-    async findAllOrm():Promise<Ciudad[]>{
-        return await this.ciudadRepository.find();
+    async findAllOrm():Promise<CiudadDTO[]>{
+        return await this.ciudadRepository.find(); //lo que retorna es un dto
     }
 
-    async findById(id :number) : Promise<Ciudad> {
+    async findById(id :number) : Promise<CiudadDTO> {
         try{
             const criterio : FindOneOptions = { where: { id:id} };
-            const ciudad : Ciudad = await this.ciudadRepository.findOne( criterio );
+            const ciudad : CiudadDTO = await this.ciudadRepository.findOne( criterio );
             if(ciudad)
                 return ciudad
             else  

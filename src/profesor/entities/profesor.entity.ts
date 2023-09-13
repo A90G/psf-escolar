@@ -1,3 +1,4 @@
+import { Clase } from "src/clase/entities/clase.entity";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
@@ -8,7 +9,12 @@ export class Profesor{
     id:number;
 
     @Column()
+    @IsNotEmpty()
     apellidoNombre:string;
+
+    @OneToMany(() => Clase, clases => clases.profesor)
+    public clases: Clase[];
+
 
     constructor(apellidoNombre:string){
         this.apellidoNombre = apellidoNombre

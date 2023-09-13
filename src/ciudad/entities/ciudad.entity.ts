@@ -11,7 +11,7 @@ export class Ciudad{
     @Column()
     nombre:string;
 
-    @OneToMany(type => Escuela, escuela => escuela.ciudad)
+    @OneToMany(() => Escuela, escuela => escuela.ciudad)
     @JoinColumn()
     public escuelas : Escuela[];
 
