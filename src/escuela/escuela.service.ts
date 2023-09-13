@@ -2,117 +2,149 @@ import { CreateEscuelaDto } from './dto/create-escuela.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository , FindOneOptions } from 'typeorm';
+import { Escuela } from './entities/escuela.entity';
 
 @Injectable()
 export class EscuelaService {
 
-  private estudiantes:Estudiante[] = [];
+  private escuelas:Escuela[] = [];
 
   constructor(
-    @InjectRepository(Estudiante)
-    private readonly estudianteRepository:Repository<Estudiante>
+    @InjectRepository(Escuela)
+    private readonly escuelasRepository:Repository<Escuela>
     ){}
 
-    //'This action adds a new estudiante';
+    //'This action adds a new school';
 
-    async create(createEstudianteDto : CreateEstudianteDto) : Promise<boolean>{
+    async create(createEscuelaDto : CreateEscuelaDto) : Promise<boolean>{
       try{
-          let estudiante : Estudiante = await this.estudianteRepository.save(new Estudiante(createEstudianteDto.apellidoNombre, createEstudianteDto.fechaNacimiento));
-          if(estudiante)
-             return true;
-         else
-             throw new Error('No se pudo crear el Estudiante');
+        const escuela = new Escuela (); 
+        escuela.nombre = createEscuelaDto.nombre;
+        escuela.domicilio = createEscuelaDto.domicilio;
+        escuela.ciudad = createEscuelaDto.ciudad;
+        escuela.clases = createEscuelaDto.clase;
+
+        const savedEscuela = await this.escuelasRepository.save(escuela);
+
+        if (savedEscuela) {
+          
+          return true;
+        } else {
+          throw new Error('No se pudo crear la nueva escuela');
+        }
       }
       catch(error){
           throw new HttpException({
               status: HttpStatus.NOT_FOUND,
-              error: 'Error en Estudiante create - ' + error
+              error: 'Error en escuela create - ' + error
           },HttpStatus.NOT_FOUND)
       }
   }
-
-    // return `This action returns all estudiante`
-    async findAllRaw():Promise<Estudiante[]>{
-      this.estudiantes = [];
-      let datos = await this.estudianteRepository.query("select * from estudiante");
+// return `This action returns all Schools`
+    async findAllRaw():Promise<Escuela[]>{
+      this.escuelas = [];
+      let datos = await this.escuelasRepository.query("select * from escuelas");
 
       datos.forEach(element => {
-          let estudiante : Estudiante = new Estudiante(element.apellidoNombre, element.fechaNacimiento);
-          this.estudiantes.push(estudiante)
+          let escuela : Escuela = new Escuela[(element.nombre, element.domicilio, element.ciudad, element.clases)]; // será solución así? ver create
+          this.escuelas.push(escuela)
       });
 
-      return this.estudiantes;
+      return this.escuelas;
   }
 
-  async findAllOrm():Promise<Estudiante[]>{
-    return await this.estudianteRepository.find();
+  async findAllOrm():Promise<Escuela[]>{
+    return await this.escuelasRepository.find();
 }
 
-//`This action returns a #${id} estudiante`
+//`This action returns a #${id} escuela`
 
-async findById(id :number) : Promise<Estudiante> {
+async findById(id :number) : Promise<Escuela> {
   try{
       const criterio : FindOneOptions = { where: { id:id} };
-      const estudiante : Estudiante = await this.estudianteRepository.findOne( criterio );
-      if(estudiante)
-          return estudiante
+      const escuela : Escuela = await this.escuelasRepository.findOne( criterio );
+      if(escuela)
+          return escuela
       else  
-          throw new Error('No se encuentra el estudiante');
+          throw new Error('No se encuentra la escuela');
   }
   catch(error){
       throw new HttpException({
           status: HttpStatus.CONFLICT,
-          error: 'Error en estudiante find by id - ' + error
+          error: 'Error en escuela find by id - ' + error
       },HttpStatus.NOT_FOUND)
   }
 }
 
-// `This action updates a #${id} estudiante`;
+// `This action updates a #${id} escuela`;
 
-  async update(createEstudianteDto : CreateEstudianteDto, id:number) : Promise<String>{
-    try{
-        const criterio : FindOneOptions = { where : {id:id} }
-        let estudiante : Estudiante = await this.estudianteRepository.findOne(criterio);
-        if(estudiante)
-            throw new Error('no se pudo encontrar el estudiante a modificar ');
-        else{
-            let antiguoEstudiante = { 
-                apellidoNombre: estudiante.getapellidoNombre(),    
-            };
-            estudiante.setapellidoNombre(createEstudianteDto.apellidoNombre); 
-            estudiante.setfechaNacimiento(createEstudianteDto.fechaNacimiento);
-            // acá va un &&?? o cómo me aseguro que ambas condiciones se cumplen para update estudiante? porque en ningún lugar yo le puse que eran not null por ejemplo, mismo para el create o el delete
+async update(createEscuelaDto : CreateEscuelaDto, id:number) : Promise<string>{
+  try{
+      const criterio : FindOneOptions = { where : {id:id} };
+      let escuela : Escuela = await this.escuelasRepository.findOne(criterio);
+      if(escuela)
+          throw new Error('no se pudo encontrar la escuela a modificar ');
+          const antiguaEscuela = {
+            nombre: escuela.getNombre(),
+            domicilio: escuela.getDomicilio(),
+            ciudad: escuela.getCiudad(),
+            clase: escuela.getClase(),
+          };
+      
+          if (createEscuelaDto.nombre !== null && createEscuelaDto.nombre !== undefined) {
+            escuela.setNombre(createEscuelaDto.nombre);
+          } else {
+            throw new Error('El dato "nombre" de la escuela no puede ser null o undefined');
+          }
+      
+          if (createEscuelaDto.domicilio !== null && createEscuelaDto.domicilio !== undefined) {
+            escuela.setDomicilio(createEscuelaDto.domicilio);
+          } else {
+            throw new Error('El dato "profesor" de la escuela no puede ser null o undefined');
+          }
+      
+          if (createEscuelaDto.ciudad !== null && createEscuelaDto.ciudad !== undefined) {
+            escuela.setCiudad(createEscuelaDto.ciudad);
+          } else {
+            throw new Error('El dato "ciudad" de la escuela no puede ser null o undefined');
+          }
 
-            estudiante = await this.estudianteRepository.save(estudiante);
-            return `OK - ${antiguoEstudiante.apellidoNombre} --> ${createEstudianteDto.apellidoNombre} (${createEstudianteDto.fechaNacimiento})`;
-        }
-    }
-    catch(error){
-        throw new HttpException({
-            status: HttpStatus.NOT_FOUND,
-            error: 'Error en estudiante update - ' + error
-        },HttpStatus.NOT_FOUND)
-    }
+          if (createEscuelaDto.clase !== null && createEscuelaDto.clase !== undefined) {
+            escuela.setClase(createEscuelaDto.clase);
+          } else {
+            throw new Error('El dato "clase" de la escuela no puede ser null o undefined');
+          }
+      
+          escuela = await this.escuelasRepository.save(escuela);
+          return `OK - ${antiguaEscuela.nombre} --> ${createEscuelaDto.nombre} (${createEscuelaDto.domicilio}),(${createEscuelaDto.ciudad}),(${createEscuelaDto.clase})`;
+      }
+  catch(error){
+      throw new HttpException({
+          status: HttpStatus.NOT_FOUND,
+          error: 'Error en clase update - ' + error
+      },HttpStatus.NOT_FOUND)
+  }
 }
 
-// `This action removes a #${id} estudiante`;
+
+// `This action removes a #${id} escuela`;
 async delete(id:number): Promise<any>{
   try{
       const criterio : FindOneOptions = { where : {id:id} }
-      let estudiante : Estudiante = await this.estudianteRepository.findOne(criterio);
-      if(estudiante)// aquií llevaba ! y se lo saqué ver si queda biensin 
-          throw new Error('no se pudo eliminar estudiante ');
+      let escuela : Escuela = await this.escuelasRepository.findOne(criterio);
+      if(escuela)// aquií llevaba ! y se lo saqué ver si queda biensin 
+          throw new Error('no se pudo eliminar escuela ');
       else{
-          await this.estudianteRepository.remove(estudiante);
+          await this.escuelasRepository.remove(escuela);
           return { id:id,
-                  message:'se elimino exitosamente el estudiante'
+                  message:'se elimino exitosamente la escuela'
               }
           }
   }
   catch(error){
       throw new HttpException({
           status: HttpStatus.NOT_FOUND,
-          error: 'Error en estudiante delete - ' + error
+          error: 'Error en escuela delete - ' + error
       },HttpStatus.NOT_FOUND)
   }
   
@@ -120,24 +152,3 @@ async delete(id:number): Promise<any>{
 }
 
 
-
-  create(createEscuelaDto: CreateEscuelaDto) {
-    return 'This action adds a new escuela';
-  }
-
-  findAll() {
-    return `This action returns all escuela`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} escuela`;
-  }
-
-  update(id: number, updateEscuelaDto: UpdateEscuelaDto) {
-    return `This action updates a #${id} escuela`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} escuela`;
-  }
-}

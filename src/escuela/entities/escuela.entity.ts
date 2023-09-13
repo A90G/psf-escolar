@@ -9,10 +9,12 @@ export class Escuela {
     private idEscuela : number;
 
     @Column()
-    private nombre : string;
+    // private
+    nombre : string;
 
     @Column()
-    private domicilio : string;
+    //private
+    domicilio : string;
 
     @ManyToOne(() => Ciudad, ciudad => ciudad.escuelas)
     @JoinColumn({name:"id_ciudad" })//nombre de la columna fk
@@ -22,12 +24,15 @@ export class Escuela {
     @JoinColumn({name:"id_clase" })
     public clases : Clase[];
 
-    constructor (id : number, nombre : string, domicilio : string, ciudad : Ciudad, clases: Clase[]) { 
-        this.idEscuela = id;
-        this.nombre = nombre;
-        this.domicilio = domicilio;
-        this.ciudad = ciudad;
-        this.clases = clases
+    constructor ( 
+        // borré constructor de escuela y de clases para que no me arrojen error los service de create, entiendo que está mal y hay que revisar
+        //id : number, nombre : string, domicilio : string, ciudad : Ciudad, clases: Clase[]
+        ) { 
+        // this.idEscuela = id;
+        // this.nombre = nombre;
+        // this.domicilio = domicilio;
+        // this.ciudad = ciudad;
+        // this.clases = clases
     }
 
     public getIdEscuela(): number { 

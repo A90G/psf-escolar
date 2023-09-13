@@ -9,6 +9,7 @@ export class Clase {
     private idClase : number;
 
     @Column()
+    //private 
     nombre : string;
 
     @ManyToOne(() => Profesor, profesor  => profesor.clases)
@@ -19,7 +20,14 @@ export class Clase {
     @JoinColumn({name: "id_escuela"}) // fk id escuela
     public escuela: Escuela;
 
-    constructor () { 
+    constructor (
+        //id : number, nombre : string, profesor: Profesor, escuela: Escuela
+        ) { 
+        // this.idClase = id;
+        // this.nombre = nombre;
+        // this.profesor = profesor;
+        // this.escuela = escuela
+        //soluciona este problema con el create del service
 
     }
 
@@ -47,5 +55,4 @@ export class Clase {
     public setEscuela(escuela: Escuela): void {
         this.escuela = escuela; 
     }
-
 }

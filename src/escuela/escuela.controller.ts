@@ -1,34 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {  Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { EscuelaService } from './escuela.service';
 import { CreateEscuelaDto } from './dto/create-escuela.dto';
-import { UpdateEscuelaDto } from './dto/update-escuela.dto';
+import { Escuela } from './entities/escuela.entity';
 
 @Controller('escuela')
 export class EscuelaController {
   constructor(private readonly escuelaService: EscuelaService) {}
 
-  @Post()
-  create(@Body() createEscuelaDto: CreateEscuelaDto) {
-    return this.escuelaService.create(createEscuelaDto);
+  @Get()
+  async getAllRaw():Promise<Escuela[]>{
+    return await this.escuelaService.findAllRaw();
   }
 
-  @Get()
-  findAll() {
-    return this.escuelaService.findAll();
+  @Get('orm')
+  async getAllOrm():Promise<Escuela[]>{
+    return await this.escuelaService.findAllOrm();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.escuelaService.findOne(+id);
+  async findOne(@Param('id') id: number) : Promise<Escuela>{
+    return await this.escuelaService.findById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEscuelaDto: UpdateEscuelaDto) {
-    return this.escuelaService.update(+id, updateEscuelaDto);
+  @Post('crear')
+  async crearEscuela(@Body() createEscuelaDto : CreateEscuelaDto):Promise<boolean>{
+    return this.escuelaService.create(createEscuelaDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.escuelaService.remove(+id);
+  @Put('actualizar/:id')
+    async actualizarEscuelaId(@Body() createEscuelaDto : CreateEscuelaDto, @Param('id') id: number): Promise<String> {
+        return this.escuelaService.update(createEscuelaDto,id)
+    } 
+
+
+  @Delete('eliminar/:id')
+  async eliminarEscuela(@Param('id') id:number): Promise<Escuela>{
+    return await this.escuelaService.delete(+id);
   }
 }
