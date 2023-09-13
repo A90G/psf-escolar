@@ -1,4 +1,4 @@
-//import { Clase } from "src/clase/clase.entity";
+import { Clase } from "src/clase/entities/clase.entity";
 import { Ciudad } from "src/ciudad/entities/ciudad.entity";
 import { Entity,  PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 
@@ -22,11 +22,12 @@ export class Escuela {
     @JoinColumn({name:"id_clase" })
     public clases : Clase[];
 
-    constructor (id : number, nombre : string, domicilio : string, ciudad : Ciudad) {
+    constructor (id : number, nombre : string, domicilio : string, ciudad : Ciudad, clases: Clase[]) { 
         this.idEscuela = id;
         this.nombre = nombre;
         this.domicilio = domicilio;
-        this.ciudad = ciudad
+        this.ciudad = ciudad;
+        this.clases = clases
     }
 
     public getIdEscuela(): number { 
@@ -53,5 +54,12 @@ export class Escuela {
     public setCiudad(ciudad: Ciudad): void {
         this.ciudad = ciudad; 
     }
+    public getClase(): Clase [] {
+        return this.clases; 
+    }
+    public setClase(clase: Clase []): void {
+        this.clases = clase; 
+    }
+
 }
 

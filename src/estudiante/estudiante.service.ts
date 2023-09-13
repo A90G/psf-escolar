@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository , FindOneOptions } from 'typeorm';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto';
-//import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
 import { Estudiante } from './entities/estudiante.entity';
 
 @Injectable()
