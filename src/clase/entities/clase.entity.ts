@@ -19,6 +19,8 @@ export class Clase {
     @JoinColumn({name: "id_escuela"}) // fk id escuela
     public escuela: Escuela;
 
+    //falta relación estudiantes con clase y agregarlo al dto
+
     constructor (nombre : string, profesor: Profesor, escuela: Escuela) { 
         // this.idClase = id;
         this.nombre = nombre;

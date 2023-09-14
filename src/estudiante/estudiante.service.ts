@@ -76,18 +76,20 @@ async findById(id :number) : Promise<Estudiante> {
         let estudiante : Estudiante = await this.estudianteRepository.findOne(criterio);
         if(estudiante)
             throw new Error('no se pudo encontrar el estudiante a modificar ');
-        else{
             let antiguoEstudiante = { 
-                apellidoNombre: estudiante.getapellidoNombre(),    
+                apellidoNombre: estudiante.getapellidoNombre(), 
+                fechaNacimiento: estudiante.getfechaNacimiento(),   
             };
-            estudiante.setapellidoNombre(createEstudianteDto.apellidoNombre); 
-            estudiante.setfechaNacimiento(createEstudianteDto.fechaNacimiento);
-            // acá va un &&?? o cómo me aseguro que ambas condiciones se cumplen para update estudiante? porque en ningún lugar yo le puse que eran not null por ejemplo, mismo para el create o el delete
+            if (createEstudianteDto.apellidoNombre !== null && createEstudianteDto.apellidoNombre !== undefined) {
+                estudiante.setapellidoNombre(createEstudianteDto.apellidoNombre);
+              }       
+              if (createEstudianteDto.fechaNacimiento !== null && createEstudianteDto.fechaNacimiento !== undefined) {
+                estudiante.setfechaNacimiento(createEstudianteDto.fechaNacimiento);
+              } 
 
             estudiante = await this.estudianteRepository.save(estudiante);
             return `OK - ${antiguoEstudiante.apellidoNombre} --> ${createEstudianteDto.apellidoNombre} (${createEstudianteDto.fechaNacimiento})`;
         }
-    }
     catch(error){
         throw new HttpException({
             status: HttpStatus.NOT_FOUND,

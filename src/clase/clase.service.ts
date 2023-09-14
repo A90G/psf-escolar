@@ -98,9 +98,7 @@ async findById(id :number) : Promise<Clase> {
         
             if (createClaseDto.escuela !== null && createClaseDto.escuela !== undefined) {
               clase.setEscuela(createClaseDto.escuela);
-            } else {
-              throw new Error('El dato "escuela" de la clase no puede ser null o undefined');
-            }
+            } 
         
             clase = await this.clasesRepository.save(clase);
             return `OK - ${antiguaClase.nombre} --> ${createClaseDto.nombre} (${createClaseDto.profesor}) (${createClaseDto.escuela})`;

@@ -88,29 +88,17 @@ async update(createEscuelaDto : CreateEscuelaDto, id:number) : Promise<string>{
       
           if (createEscuelaDto.nombre !== null && createEscuelaDto.nombre !== undefined) {
             escuela.setNombre(createEscuelaDto.nombre);
-          } else {
-            throw new Error('El dato "nombre" de la escuela no puede ser null o undefined');
-          }
-      
+          }       
           if (createEscuelaDto.domicilio !== null && createEscuelaDto.domicilio !== undefined) {
             escuela.setDomicilio(createEscuelaDto.domicilio);
-          } else {
-            throw new Error('El dato "profesor" de la escuela no puede ser null o undefined');
-          }
-      
+          } 
           if (createEscuelaDto.ciudad !== null && createEscuelaDto.ciudad !== undefined) {
             escuela.setCiudad(createEscuelaDto.ciudad);
-          } else {
-            throw new Error('El dato "ciudad" de la escuela no puede ser null o undefined');
-          }
-
+          } 
           if (createEscuelaDto.clase !== null && createEscuelaDto.clase !== undefined) {
-            escuela.setClase(createEscuelaDto.clase);
-          } else {
-            throw new Error('El dato "clase" de la escuela no puede ser null o undefined');
-          }
-      
-          escuela = await this.escuelasRepository.save(escuela);
+            escuela.setClase(createEscuelaDto.clase);}
+
+            escuela = await this.escuelasRepository.save(escuela);
           return `OK - ${antiguaEscuela.nombre} --> ${createEscuelaDto.nombre} (${createEscuelaDto.domicilio}),(${createEscuelaDto.ciudad}),(${createEscuelaDto.clase})`;
       }
   catch(error){

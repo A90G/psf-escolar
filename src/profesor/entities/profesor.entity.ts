@@ -1,6 +1,7 @@
 import { Clase } from "src/clase/entities/clase.entity";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
+import { DomicilioProfesor } from "src/domicilio-profesor/entities/domicilio-profesor.entity";
+import { Column, Entity, OneToMany, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { IsNotEmpty } from 'class-validator';
 
 @Entity({name:"profesor"})
 export class Profesor{
@@ -14,6 +15,10 @@ export class Profesor{
 
     @OneToMany(() => Clase, clases => clases.profesor)
     public clases: Clase[];
+
+    @OneToMany(() => DomicilioProfesor, domicilioProfesor => domicilioProfesor.profesor)
+    @JoinColumn({name:"id_domicilioProfesor" })
+    public domicilioProfesor : DomicilioProfesor;
 
 
     constructor(apellidoNombre:string){
