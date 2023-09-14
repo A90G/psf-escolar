@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { DomicilioEstudiante } from "src/domicilio-estudiante/entities/domicilio-estudiante.entity";
+import { Entity,  PrimaryGeneratedColumn, Column, JoinColumn, OneToMany } from "typeorm";
 
 
 @Entity({name:"estudiante"})
@@ -13,9 +14,14 @@ export class Estudiante{
     @Column()
     fechaNacimiento: Date;
 
-    constructor(apellidoNombre:string, fechaNacimiento: Date ){
+    @OneToMany(() => DomicilioEstudiante, domicilioEstudiante => domicilioEstudiante.estudiante)
+    @JoinColumn({name:"id_domicilioEstudiante" })
+    public domicilioEstudiante : DomicilioEstudiante [];
+
+    constructor(apellidoNombre:string, fechaNacimiento: Date, domicilioEstudiante: DomicilioEstudiante [] ){
         this.apellidoNombre = apellidoNombre;
-        this.fechaNacimiento = fechaNacimiento
+        this.fechaNacimiento = fechaNacimiento;
+        this.domicilioEstudiante = domicilioEstudiante;
     }
     public getId():number{
         return this.id;
