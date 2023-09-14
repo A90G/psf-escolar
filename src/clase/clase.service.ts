@@ -18,19 +18,11 @@ export class ClaseService {
 
     async create(createClaseDto : CreateClaseDto) : Promise<boolean>{
       try{
-        const clase = new Clase (); // Crear una nueva instancia de Clase
-        clase.nombre = createClaseDto.nombre;
-        clase.profesor = createClaseDto.profesor;
-        clase.escuela = createClaseDto.escuela;
-    
-        const savedClase = await this.clasesRepository.save(clase);
-    
-        if (savedClase) {
-          
-          return true;
-        } else {
-          throw new Error('No se pudo crear la nueva clase');
-        }
+          let clase:Clase = await this.clasesRepository.save(new Clase(createClaseDto.nombre, createClaseDto.profesor, createClaseDto.escuela));
+          if(clase)
+             return true;
+         else
+             throw new Error('No se pudo crear la nueva clase');
       }
       catch(error){
           throw new HttpException({
@@ -92,15 +84,17 @@ async findById(id :number) : Promise<Clase> {
         
             if (createClaseDto.nombre !== null && createClaseDto.nombre !== undefined) {
               clase.setNombre(createClaseDto.nombre);
-            } else {
-              throw new Error('El dato "nombre" de la clase no puede ser null o undefined');
-            }
+            } 
+            // else {
+            //   throw new Error('El dato "nombre" de la clase no puede ser null o undefined');
+            // }
         
             if (createClaseDto.profesor !== null && createClaseDto.profesor !== undefined) {
               clase.setProfesor(createClaseDto.profesor);
-            } else {
-              throw new Error('El dato "profesor" de la clase no puede ser null o undefined');
-            }
+            } 
+            // else {
+            //   throw new Error('El dato "profesor" de la clase no puede ser null o undefined');
+            // }
         
             if (createClaseDto.escuela !== null && createClaseDto.escuela !== undefined) {
               clase.setEscuela(createClaseDto.escuela);

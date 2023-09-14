@@ -18,15 +18,10 @@ export class EscuelaService {
 
     async create(createEscuelaDto : CreateEscuelaDto) : Promise<boolean>{
       try{
-        const escuela = new Escuela (); 
-        escuela.nombre = createEscuelaDto.nombre;
-        escuela.domicilio = createEscuelaDto.domicilio;
-        escuela.ciudad = createEscuelaDto.ciudad;
-        escuela.clases = createEscuelaDto.clase;
+        const escuela = await this.escuelasRepository.save(new Escuela ( 
+        createEscuelaDto.nombre, createEscuelaDto.domicilio, createEscuelaDto.ciudad, createEscuelaDto.clase));
 
-        const savedEscuela = await this.escuelasRepository.save(escuela);
-
-        if (savedEscuela) {
+        if (escuela) {
           
           return true;
         } else {
