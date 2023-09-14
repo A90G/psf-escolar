@@ -19,7 +19,7 @@ export class Escuela {
     public ciudad : Ciudad;
 
     @OneToMany(() => Clase, clases => clases.escuela)
-    @JoinColumn({name:"id_clase" })
+    //@JoinColumn({name:"id_clase" })
     public clases : Clase[];
 
     constructor (nombre : string, domicilio : string, ciudad : Ciudad, clases: Clase[] ) { 

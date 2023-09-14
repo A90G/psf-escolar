@@ -14,14 +14,14 @@ export class Estudiante{
     @Column()
     fechaNacimiento: Date;
 
-    @OneToMany(() => DomicilioEstudiante, domicilioEstudiante => domicilioEstudiante.estudiante)
-    @JoinColumn({name:"id_domicilioEstudiante" })
-    public domicilioEstudiante : DomicilioEstudiante [];
+    @OneToMany(() => DomicilioEstudiante, domicilioEstudiantes => domicilioEstudiantes.estudiante)
+   // @JoinColumn({name:"id_domicilioEstudiante" })
+    public domicilioEstudiantes : DomicilioEstudiante [];
 
-    constructor(apellidoNombre:string, fechaNacimiento: Date, domicilioEstudiante: DomicilioEstudiante [] ){
+    constructor(apellidoNombre:string, fechaNacimiento: Date, domicilioEstudiantes: DomicilioEstudiante [] ){
         this.apellidoNombre = apellidoNombre;
         this.fechaNacimiento = fechaNacimiento;
-        this.domicilioEstudiante = domicilioEstudiante;
+        this.domicilioEstudiantes = domicilioEstudiantes;
     }
     public getId():number{
         return this.id;
@@ -37,6 +37,12 @@ export class Estudiante{
     }
     public setfechaNacimiento(fechaNacimiento:Date){
         this.fechaNacimiento = fechaNacimiento;
+    }
+    public getDomicilioEstudiantes():DomicilioEstudiante[]{
+        return this.domicilioEstudiantes;
+    }
+    public setDomicilioEstudiantes(domicilioEstudiantes:DomicilioEstudiante[]){
+        this.domicilioEstudiantes = domicilioEstudiantes;
     }
 }
 

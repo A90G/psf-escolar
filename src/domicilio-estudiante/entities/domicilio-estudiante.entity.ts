@@ -11,15 +11,15 @@ export class DomicilioEstudiante {
     @Column()
     private  domicilio : string;
 
-    @OneToOne(() => Ciudad, ciudad => ciudad.escuelas)
+    @OneToOne(() => Ciudad, ciudad => ciudad.domicilioEstudiante)
     @JoinColumn({name:"id_ciudad" })//nombre de la columna fk
     public ciudad : Ciudad;
 
     @ManyToOne(() => Estudiante, estudiante => estudiante.domicilioEstudiante)
     @JoinColumn({name:"id_Profesor" })
-    public estudiante : Estudiante[];
+    public estudiante : Estudiante;
 
-    constructor (domicilio : string, ciudad : Ciudad, estudiante : Estudiante[]) { 
+    constructor (domicilio : string, ciudad : Ciudad, estudiante : Estudiante) { 
         this.domicilio = domicilio;
         this.ciudad = ciudad;
         this.estudiante = estudiante;
@@ -43,10 +43,10 @@ export class DomicilioEstudiante {
     public setCiudad(ciudad: Ciudad): void {
         this.ciudad = ciudad; 
     }
-    public getEstudiante(): Estudiante [] {
+    public getEstudiante(): Estudiante {
         return this.estudiante; 
     }
-    public setEstudiante(estudiante: Estudiante []): void {
+    public setEstudiante(estudiante: Estudiante ): void {
         this.estudiante = estudiante; 
     }
 

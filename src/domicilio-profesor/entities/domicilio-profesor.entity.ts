@@ -1,6 +1,6 @@
 import { Profesor } from "src/profesor/entities/profesor.entity"; 
 import { Ciudad } from "src/ciudad/entities/ciudad.entity";
-import { Entity,  PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, OneToOne } from "typeorm";
+import { Entity,  PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 
 @Entity('domicilioProfesor')
 export class DomicilioProfesor {
@@ -11,15 +11,18 @@ export class DomicilioProfesor {
     @Column()
     private  domicilio : string;
 
-    @OneToOne(() => Ciudad, ciudad => ciudad.escuelas)
+    @ManyToOne(() => Ciudad, ciudad => ciudad.domicilioProfesor)
     @JoinColumn({name:"id_ciudad" })//nombre de la columna fk
     public ciudad : Ciudad;
+    //@OneToOne(() => Ciudad, ciudad => ciudad.domicilioProfesor)
+    //@JoinColumn({name:"id_ciudad" })//nombre de la columna fk
+    //public ciudad : Ciudad;
 
     @ManyToOne(() => Profesor, profesor => profesor.domicilioProfesor)
     @JoinColumn({name:"id_Profesor" })
-    public profesor : Profesor[];
+    public profesor : Profesor;
 
-    constructor (domicilio : string, ciudad : Ciudad, profesor : Profesor[] ) { 
+    constructor (domicilio : string, ciudad : Ciudad, profesor : Profesor ) { 
         this.domicilio = domicilio;
         this.ciudad = ciudad;
         this.profesor = profesor;
@@ -38,15 +41,15 @@ export class DomicilioProfesor {
         this.domicilio = domicilio; 
     }
     public getCiudad(): Ciudad {
-        return this.ciudad; 
+        return this.ciudades; 
     }
-    public setCiudad(ciudad: Ciudad): void {
-        this.ciudad = ciudad; 
+    public setCiudad(ciudades: Ciudad): void {
+        this.ciudades = ciudades; 
     }
-    public getProfesor(): Profesor [] {
+    public getProfesor(): Profesor {
         return this.profesor; 
     }
-    public setProfesor(profesor: Profesor []): void {
+    public setProfesor(profesor: Profesor): void {
         this.profesor = profesor; 
     }
 
