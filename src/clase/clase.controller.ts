@@ -8,7 +8,7 @@ export class ClaseController {
 
   @Get('raw')
   async getAllRaw():Promise<Clase[]>{
-    return await this.claseService.findAllRaw();
+    return await this.claseService.findAllRaw(); // si abro parentesis y coloco relations:Estudiantes me va a traer todos los estudiantes por clase, es decir puedo establecer un criterio de búsqueda específico
   }
 
   @Get('orm')

@@ -18,7 +18,7 @@ export class DomicilioProfesor {
     //@JoinColumn({name:"id_ciudad" })//nombre de la columna fk
     //public ciudad : Ciudad;
 
-    @ManyToOne(() => Profesor, profesor => profesor.domicilioProfesor)
+    @ManyToOne(() => Profesor, profesor => profesor.domicilioProfesores)
     @JoinColumn({name:"id_Profesor" })
     public profesor : Profesor;
 
@@ -41,10 +41,10 @@ export class DomicilioProfesor {
         this.domicilio = domicilio; 
     }
     public getCiudad(): Ciudad {
-        return this.ciudades; 
+        return this.ciudad; 
     }
     public setCiudad(ciudades: Ciudad): void {
-        this.ciudades = ciudades; 
+        this.ciudad = ciudades; 
     }
     public getProfesor(): Profesor {
         return this.profesor; 

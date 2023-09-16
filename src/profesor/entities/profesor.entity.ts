@@ -1,6 +1,6 @@
 import { Clase } from "src/clase/entities/clase.entity";
 import { DomicilioProfesor } from "src/domicilio-profesor/entities/domicilio-profesor.entity";
-import { Column, Entity, OneToMany, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { IsNotEmpty } from 'class-validator';
 
 @Entity({name:"profesor"})

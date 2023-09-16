@@ -16,9 +16,9 @@ export class EstudianteService {
 
     //'This action adds a new estudiante';
 
-    async create(createEstudianteDto : CreateEstudianteDto) : Promise<boolean>{
+    async create(createEstudianteDto : CreateEstudianteDto) : Promise<boolean>{ //yo puse apellido fecha todo junto como lo indicaba el gráfico pero el profesor separó estas variantes en nombre por un lado y fecha por el otro   
       try{
-          let estudiante : Estudiante = await this.estudianteRepository.save(new Estudiante(createEstudianteDto.apellidoNombre, createEstudianteDto.fechaNacimiento));
+          let estudiante : Estudiante = await this.estudianteRepository.save(new Estudiante(createEstudianteDto.apellidoNombre, createEstudianteDto.fechaNacimiento, createEstudianteDto.domicilioEstudiante, createEstudianteDto.clases));
           if(estudiante)
              return true;
          else
@@ -38,7 +38,7 @@ export class EstudianteService {
       let datos = await this.estudianteRepository.query("select * from estudiante");
 
       datos.forEach(element => {
-          let estudiante : Estudiante = new Estudiante(element.apellidoNombre, element.fechaNacimiento);
+          let estudiante : Estudiante = new Estudiante(element.apellidoNombre, element.fechaNacimiento, element.domicilioEstudiante, element.clase);
           this.estudiantes.push(estudiante)
       });
 

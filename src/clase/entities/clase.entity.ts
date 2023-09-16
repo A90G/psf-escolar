@@ -1,6 +1,7 @@
 import { Escuela } from "src/escuela/entities/escuela.entity";
+import { Estudiante } from "src/estudiante/entities/estudiante.entity";
 import { Profesor } from "src/profesor/entities/profesor.entity";
-import {  Entity,  PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from "typeorm";
+import {  Entity,  PrimaryGeneratedColumn, Column, ManyToMany, JoinColumn, ManyToOne } from "typeorm";
 
 @Entity('clases')
 export class Clase {
@@ -19,13 +20,18 @@ export class Clase {
     @JoinColumn({name: "id_escuela"}) // fk id escuela
     public escuela: Escuela;
 
+    @ManyToMany (()=> Estudiante, estudiantes => estudiantes.clases)
+    @JoinColumn({name: "id_estudiante"}) // fk id estudiante
+    public estudiantes: Estudiante;
+
     //falta relación estudiantes con clase y agregarlo al dto
 
-    constructor (nombre : string, profesor: Profesor, escuela: Escuela) { 
+    constructor (nombre : string, profesor: Profesor, escuela: Escuela, estudiantes: Estudiante) { 
         // this.idClase = id;
         this.nombre = nombre;
         this.profesor = profesor;
-        this.escuela = escuela
+        this.escuela = escuela;
+        this.estudiantes = estudiantes;
        // soluciona este problema con el create del service
 
     }
@@ -53,5 +59,11 @@ export class Clase {
     }
     public setEscuela(escuela: Escuela): void {
         this.escuela = escuela; 
+    }
+    public getEstudiante(): Estudiante{
+        return this.estudiantes; 
+    }
+    public setEstudiante(estudiantes: Estudiante): void {
+        this.estudiantes = estudiantes; 
     }
 }
