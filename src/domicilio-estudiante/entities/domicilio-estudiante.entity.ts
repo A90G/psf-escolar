@@ -15,7 +15,7 @@ export class DomicilioEstudiante {
     @JoinColumn({name:"id_ciudad" })//nombre de la columna fk
     public ciudad : Ciudad;
 
-    @ManyToOne(() => Estudiante, estudiante => estudiante.domicilioEstudiante)
+    @ManyToOne(() => Estudiante, estudiante => estudiante.domicilioEstudiantes)
     @JoinColumn({name:"id_Profesor" })
     public estudiante : Estudiante;
 

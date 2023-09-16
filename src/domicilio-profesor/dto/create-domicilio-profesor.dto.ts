@@ -6,5 +6,5 @@ export class CreateDomicilioProfesorDto {
 
     readonly domicilio : string;
     readonly ciudad: Ciudad;
-    readonly profesor : Profesor[];
+    readonly profesor : Profesor;
 }

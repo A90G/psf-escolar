@@ -1,3 +1,4 @@
+import { DomicilioEstudiante } from "src/domicilio-estudiante/entities/domicilio-estudiante.entity";
 import { DomicilioProfesor } from "src/domicilio-profesor/entities/domicilio-profesor.entity";
 import { Escuela } from "src/escuela/entities/escuela.entity";
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn} from "typeorm";
@@ -20,7 +21,9 @@ export class Ciudad{
     //@JoinColumn({name:"id_DomicilioProfesor" })//nombre de la columna fk
     public domicilioProfesor : DomicilioProfesor [];
 
-    //falta relación domicilio estudiante y agregarla al dto
+    @OneToOne(() => DomicilioEstudiante, domicilioEstudiante => domicilioEstudiante.ciudad)
+   // @JoinColumn({name:"DomicilioEstudiante_id" })
+    public domicilioEstudiante : DomicilioEstudiante;
 
     constructor(nombre:string){
         this.nombre = nombre
@@ -46,5 +49,10 @@ export class Ciudad{
     public setDomicilioProfesor(domicilioProfesor: DomicilioProfesor []): void { 
         this.domicilioProfesor = domicilioProfesor; 
     }
-
+    public getDomicilioEstudiante(): DomicilioEstudiante { 
+        return this.domicilioEstudiante;
+    }
+    public setDomicilioEstudiante(domicilioEstudiante: DomicilioEstudiante): void { 
+        this.domicilioEstudiante= domicilioEstudiante; 
+    }
 }
