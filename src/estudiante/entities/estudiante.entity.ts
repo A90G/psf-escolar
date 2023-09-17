@@ -1,3 +1,4 @@
+import { Asistencia } from "src/asistencia/entities/asistencia.entity";
 import { Clase } from "src/clase/entities/clase.entity";
 import { DomicilioEstudiante } from "src/domicilio-estudiante/entities/domicilio-estudiante.entity";
 import { Entity,  PrimaryGeneratedColumn, Column, ManyToMany, JoinColumn, OneToMany } from "typeorm";
@@ -22,11 +23,15 @@ export class Estudiante{
     @ManyToMany(() => Clase, clases => clases.estudiantes) // en el gráfico se observa una relación uno a muchos pero en clases decidimos ir por muchos a muchos
     public clases: Clase[];
 
-    constructor(apellidoNombre:string, fechaNacimiento: Date, domicilioEstudiantes: DomicilioEstudiante [], clases: Clase []){
+    @ManyToMany(() => Asistencia, asistencia => asistencia.estudiante) // en el gráfico se observa una relación uno a muchos pero en clases decidimos ir por muchos a muchos
+    public asistencia: Asistencia[];
+
+    constructor(apellidoNombre:string, fechaNacimiento: Date, domicilioEstudiantes: DomicilioEstudiante [], clases: Clase [], asistencia: Asistencia []){
         this.apellidoNombre = apellidoNombre;
         this.fechaNacimiento = fechaNacimiento;
         this.domicilioEstudiantes = domicilioEstudiantes;
         this.clases = clases;
+        this.asistencia = asistencia;
     }
     public getId():number{
         return this.id;

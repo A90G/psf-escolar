@@ -1,3 +1,4 @@
+import { Asistencia } from "src/asistencia/entities/asistencia.entity";
 import { Escuela } from "src/escuela/entities/escuela.entity";
 import { Estudiante } from "src/estudiante/entities/estudiante.entity";
 import { Profesor } from "src/profesor/entities/profesor.entity";
@@ -24,7 +25,9 @@ export class Clase {
     @JoinColumn({name: "id_estudiante"}) // fk id estudiante
     public estudiantes: Estudiante;
 
-    //falta relación estudiantes con clase y agregarlo al dto
+    @ManyToMany(() => Asistencia, asistencia => asistencia.clases) // en el gráfico se observa una relación uno a muchos pero en clases decidimos ir por muchos a muchos
+    @JoinColumn({name:"id_asistencia" })
+    public asistencia: Asistencia;
 
     constructor (nombre : string, profesor: Profesor, escuela: Escuela, estudiantes: Estudiante) { 
         // this.idClase = id;

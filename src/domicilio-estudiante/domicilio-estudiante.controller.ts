@@ -1,34 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { DomicilioEstudianteService } from './domicilio-estudiante.service';
 import { CreateDomicilioEstudianteDto } from './dto/create-domicilio-estudiante.dto';
-import { UpdateDomicilioEstudianteDto } from './dto/update-domicilio-estudiante.dto';
+import { DomicilioEstudiante } from './entities/domicilio-estudiante.entity';
 
 @Controller('domicilio-estudiante')
 export class DomicilioEstudianteController {
   constructor(private readonly domicilioEstudianteService: DomicilioEstudianteService) {}
 
-  @Post()
-  create(@Body() createDomicilioEstudianteDto: CreateDomicilioEstudianteDto) {
-    return this.domicilioEstudianteService.create(createDomicilioEstudianteDto);
+  @Get()
+  async getAllRaw():Promise<DomicilioEstudiante[]>{
+    return await this.domicilioEstudianteService.findAllRaw();
   }
 
-  @Get()
-  findAll() {
-    return this.domicilioEstudianteService.findAll();
+  @Get('orm')
+  async getAllOrm():Promise<DomicilioEstudiante[]>{
+    return await this.domicilioEstudianteService.findAllOrm();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.domicilioEstudianteService.findOne(+id);
+  async findOne(@Param('id') id: number) : Promise<DomicilioEstudiante>{
+    return await this.domicilioEstudianteService.findById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDomicilioEstudianteDto: UpdateDomicilioEstudianteDto) {
-    return this.domicilioEstudianteService.update(+id, updateDomicilioEstudianteDto);
+  @Post('crear')
+  async crearDomicilioEstudiante(@Body() createDomicilioEstudianteDto: CreateDomicilioEstudianteDto):Promise<boolean>{
+    return this.domicilioEstudianteService.create(createDomicilioEstudianteDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.domicilioEstudianteService.remove(+id);
-  }
+  @Put('actualizar/:id')
+    async actualizarDomicilioEstudiantePorId(@Body() createDomicilioEstudianteDto: CreateDomicilioEstudianteDto, @Param('id') id: number): Promise<String> {
+        return this.domicilioEstudianteService.update(createDomicilioEstudianteDto,id)
+    } 
+
+
+  @Delete('eliminar/:id')
+  async eliminarDomicilioProfesor(@Param('id') id:number): Promise<DomicilioEstudiante>{
+    return await this.domicilioEstudianteService.delete(+id);
+}
 }
