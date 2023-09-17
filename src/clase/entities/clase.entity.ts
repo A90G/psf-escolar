@@ -1,5 +1,6 @@
 import { Asistencia } from "src/asistencia/entities/asistencia.entity";
 import { Escuela } from "src/escuela/entities/escuela.entity";
+import { EstudianteXclase } from "src/estudiante-xclase/entities/estudiante-xclase.entity";
 import { Estudiante } from "src/estudiante/entities/estudiante.entity";
 import { Profesor } from "src/profesor/entities/profesor.entity";
 import {  Entity,  PrimaryGeneratedColumn, Column, ManyToMany, JoinColumn, ManyToOne } from "typeorm";
@@ -27,16 +28,19 @@ export class Clase {
 
     @ManyToMany(() => Asistencia, asistencia => asistencia.clases) // en el gráfico se observa una relación uno a muchos pero en clases decidimos ir por muchos a muchos
     @JoinColumn({name:"id_asistencia" })
-    public asistencia: Asistencia;
+    public asistencia: Asistencia [];
 
-    constructor (nombre : string, profesor: Profesor, escuela: Escuela, estudiantes: Estudiante) { 
-        // this.idClase = id;
+    @ManyToMany(() => EstudianteXclase, estudianteXclase => estudianteXclase.clases) 
+    @JoinColumn({name:"id_estudianteXclase" })
+    public estudianteXclase: EstudianteXclase[];
+
+    constructor (nombre : string, profesor: Profesor, escuela: Escuela, estudiantes: Estudiante, asistencia: Asistencia [], estudianteXclase: EstudianteXclase[]) { 
         this.nombre = nombre;
         this.profesor = profesor;
         this.escuela = escuela;
         this.estudiantes = estudiantes;
-       // soluciona este problema con el create del service
-
+        this.asistencia = asistencia;
+        this.estudianteXclase = estudianteXclase;
     }
 
     public getIdClase(): number { 
@@ -68,5 +72,17 @@ export class Clase {
     }
     public setEstudiante(estudiantes: Estudiante): void {
         this.estudiantes = estudiantes; 
+    }
+    public getEstudianteXClase(): EstudianteXclase []{
+        return this.estudianteXclase; 
+    }
+    public setEstudianteXClase(estudianteXclase: EstudianteXclase []): void {
+        this.estudianteXclase = estudianteXclase; 
+    }
+    public getAsistencia(): Asistencia []{
+        return this.asistencia; 
+    }
+    public setAsistencia(asistencia: Asistencia[]): void {
+        this.asistencia = asistencia; 
     }
 }

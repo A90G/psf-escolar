@@ -2,6 +2,7 @@ import { CreateAsistenciaDto } from './dto/create-asistencia.dto';
 import { Asistencia } from './entities/asistencia.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Estudiante } from 'src/estudiante/entities/estudiante.entity';
 import { Repository , FindOneOptions } from 'typeorm';
 
 
@@ -53,7 +54,7 @@ export class AsistenciaService {
 
 async findById(id :number) : Promise<Asistencia> {
   try{
-      const criterio : FindOneOptions = { where: { id:id} };
+      const criterio : FindOneOptions = { where: { estudiante:Estudiante} };
       const asistencia : Asistencia = await this.asistenciaRepository.findOne( criterio );
       if(asistencia)
           return asistencia
@@ -63,16 +64,16 @@ async findById(id :number) : Promise<Asistencia> {
   catch(error){
       throw new HttpException({
           status: HttpStatus.CONFLICT,
-          error: 'Error en asistencia find by id - ' + error
+          error: 'Error en asistencia find by estudiante - ' + error
       },HttpStatus.NOT_FOUND)
   }
 }
 
 // `This action updates a #${id} asistencia`;
 
-  async update(createAsistenciaDto : CreateAsistenciaDto, id:number) : Promise<String>{
+  async update(createAsistenciaDto : CreateAsistenciaDto, estudiante:Estudiante) : Promise<String>{
     try{
-        const criterio : FindOneOptions = { where : {id:id} }
+        const criterio : FindOneOptions = { where : {estudiante:Estudiante} }
         let asistencia : Asistencia = await this.asistenciaRepository.findOne(criterio);
         if(asistencia)
             throw new Error('no se pudo encontrar la asistencia a modificar ');

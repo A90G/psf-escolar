@@ -1,34 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { AsistenciaService } from './asistencia.service';
 import { CreateAsistenciaDto } from './dto/create-asistencia.dto';
 import { UpdateAsistenciaDto } from './dto/update-asistencia.dto';
+import { Asistencia } from './entities/asistencia.entity';
 
 @Controller('asistencia')
 export class AsistenciaController {
   constructor(private readonly asistenciaService: AsistenciaService) {}
 
-  @Post()
-  create(@Body() createAsistenciaDto: CreateAsistenciaDto) {
-    return this.asistenciaService.create(createAsistenciaDto);
-  }
+  @Get('raw')
+  async getAllRaw():Promise<Asistencia[]>{
+    return await this.asistenciaService.findAllRaw();}
 
-  @Get()
-  findAll() {
-    return this.asistenciaService.findAll();
+  @Get('orm')
+  async getAllOrm():Promise<Asistencia[]>{
+    return await this.asistenciaService.findAllOrm();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.asistenciaService.findOne(+id);
+  async findOne(@Param('id') id: number) : Promise<Asistencia>{ // ojo como puse en el service no lleva id pero dijimos que lo ibamos a resolver en clase el cómo sacarle este dato
+    return await this.asistenciaService.findById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAsistenciaDto: UpdateAsistenciaDto) {
-    return this.asistenciaService.update(+id, updateAsistenciaDto);
+  @Post('crear')
+  async crearAsistencia(@Body() createAsistenciaDto: CreateAsistenciaDto):Promise<boolean>{
+    return this.asistenciaService.create(createAsistenciaDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.asistenciaService.remove(+id);
-  }
+  @Put('actualizar/:id')
+    async actualizarAsistenciaId(@Body() createAsistenciaDto: CreateAsistenciaDto, @Param('id') id: number): Promise<String> {
+        return this.asistenciaService.update(createAsistenciaDto,id)
+    } 
+
+  @Delete('eliminar/:id')
+  async eliminarAsistencia(@Param('id')id:number) : Promise<Asistencia>{
+    return await this.asistenciaService.delete(id);
+}
 }

@@ -18,7 +18,7 @@ export class ClaseService {
 
     async create(createClaseDto : CreateClaseDto) : Promise<boolean>{
       try{
-          let clase:Clase = await this.clasesRepository.save(new Clase(createClaseDto.nombre, createClaseDto.profesor, createClaseDto.escuela));
+          let clase:Clase = await this.clasesRepository.save(new Clase(createClaseDto.nombre, createClaseDto.profesor, createClaseDto.escuela, createClaseDto.estudiantes, createClaseDto.asistencia, createClaseDto.estudianteXclase ));
           if(clase)
              return true;
          else
@@ -38,7 +38,7 @@ export class ClaseService {
       let datos = await this.clasesRepository.query("select * from clases");
 
       datos.forEach(element => {
-          let clase : Clase = new Clase[(element.nombre, element.profesor, element.escuela)]; // será solución así? ver create
+          let clase : Clase = new Clase[(element.nombre, element.profesor, element.escuela, element.estudiante, element.asistencia, element.estudianteXclase)]; // será solución así? ver create
           this.clases.push(clase)
       });
 
@@ -80,28 +80,36 @@ async findById(id :number) : Promise<Clase> {
               nombre: clase.getNombre(),
               profesor: clase.getProfesor(),
               escuela: clase.getEscuela(),
+              estudiante: clase.getEstudiante(),
+              asistencia: clase.getAsistencia(),
+              estudianteXclase: clase.getEstudianteXClase(),
             };
         
             if (createClaseDto.nombre !== null && createClaseDto.nombre !== undefined) {
               clase.setNombre(createClaseDto.nombre);
             } 
-            // else {
-            //   throw new Error('El dato "nombre" de la clase no puede ser null o undefined');
-            // }
-        
+                
             if (createClaseDto.profesor !== null && createClaseDto.profesor !== undefined) {
               clase.setProfesor(createClaseDto.profesor);
             } 
-            // else {
-            //   throw new Error('El dato "profesor" de la clase no puede ser null o undefined');
-            // }
-        
+           
             if (createClaseDto.escuela !== null && createClaseDto.escuela !== undefined) {
               clase.setEscuela(createClaseDto.escuela);
             } 
-        
+
+            if (createClaseDto.estudiantes !== null && createClaseDto.estudiantes !== undefined) {
+              clase.setEstudiante(createClaseDto.estudiantes);
+            } 
+            
+            if (createClaseDto.asistencia !== null && createClaseDto.asistencia !== undefined) {
+              clase.setAsistencia(createClaseDto.asistencia);
+            } 
+
+            if (createClaseDto.estudianteXclase !== null && createClaseDto.estudianteXclase !== undefined) {
+              clase.setEstudianteXClase(createClaseDto.estudianteXclase);
+            } 
             clase = await this.clasesRepository.save(clase);
-            return `OK - ${antiguaClase.nombre} --> ${createClaseDto.nombre} (${createClaseDto.profesor}) (${createClaseDto.escuela})`;
+            return `OK - ${antiguaClase.nombre} --> ${createClaseDto.nombre} (${createClaseDto.profesor}) (${createClaseDto.escuela}), (${createClaseDto.estudianteXclase})`;
         }
     catch(error){
         throw new HttpException({
