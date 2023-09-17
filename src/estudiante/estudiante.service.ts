@@ -18,7 +18,7 @@ export class EstudianteService {
 
     async create(createEstudianteDto : CreateEstudianteDto) : Promise<boolean>{ //yo puse apellido fecha todo junto como lo indicaba el gráfico pero el profesor separó estas variantes en nombre por un lado y fecha por el otro   
       try{
-          let estudiante : Estudiante = await this.estudianteRepository.save(new Estudiante(createEstudianteDto.apellidoNombre, createEstudianteDto.fechaNacimiento, createEstudianteDto.domicilioEstudiante, createEstudianteDto.clases));
+          let estudiante : Estudiante = await this.estudianteRepository.save(new Estudiante(createEstudianteDto.apellidoNombre, createEstudianteDto.fechaNacimiento, createEstudianteDto.domicilioEstudiante, createEstudianteDto.clases, createEstudianteDto.asistencia));
           if(estudiante)
              return true;
          else
@@ -38,7 +38,7 @@ export class EstudianteService {
       let datos = await this.estudianteRepository.query("select * from estudiante");
 
       datos.forEach(element => {
-          let estudiante : Estudiante = new Estudiante(element.apellidoNombre, element.fechaNacimiento, element.domicilioEstudiante, element.clase);
+          let estudiante : Estudiante = new Estudiante(element.apellidoNombre, element.fechaNacimiento, element.domicilioEstudiante, element.clase, element.asistencia);
           this.estudiantes.push(estudiante)
       });
 
@@ -78,7 +78,10 @@ async findById(id :number) : Promise<Estudiante> {
             throw new Error('no se pudo encontrar el estudiante a modificar ');
             let antiguoEstudiante = { 
                 apellidoNombre: estudiante.getapellidoNombre(), 
-                fechaNacimiento: estudiante.getfechaNacimiento(),   
+                fechaNacimiento: estudiante.getfechaNacimiento(),
+                domicilioEstudiante: estudiante.getDomicilioEstudiantes(),
+                clases: estudiante.getClase(),
+                asistencia: estudiante.getAsistencia()
             };
             if (createEstudianteDto.apellidoNombre !== null && createEstudianteDto.apellidoNombre !== undefined) {
                 estudiante.setapellidoNombre(createEstudianteDto.apellidoNombre);
@@ -86,9 +89,18 @@ async findById(id :number) : Promise<Estudiante> {
               if (createEstudianteDto.fechaNacimiento !== null && createEstudianteDto.fechaNacimiento !== undefined) {
                 estudiante.setfechaNacimiento(createEstudianteDto.fechaNacimiento);
               } 
-
+              if (createEstudianteDto.domicilioEstudiante !== null && createEstudianteDto.domicilioEstudiante !== undefined) {
+                estudiante.setDomicilioEstudiantes(createEstudianteDto.domicilioEstudiante);
+              }       
+              if (createEstudianteDto.clases !== null && createEstudianteDto.clases !== undefined) {
+                estudiante.setClase(createEstudianteDto.clases);
+              } 
+              if (createEstudianteDto.asistencia !== null && createEstudianteDto.asistencia !== undefined) {
+                estudiante.setAsistencia(createEstudianteDto.asistencia);
+              }       
+              
             estudiante = await this.estudianteRepository.save(estudiante);
-            return `OK - ${antiguoEstudiante.apellidoNombre} --> ${createEstudianteDto.apellidoNombre} (${createEstudianteDto.fechaNacimiento})`;
+            return `OK - ${antiguoEstudiante.apellidoNombre} --> ${createEstudianteDto.apellidoNombre} (${createEstudianteDto.fechaNacimiento}), (${createEstudianteDto.domicilioEstudiante}), (${createEstudianteDto.clases}), (${createEstudianteDto.asistencia})`;
         }
     catch(error){
         throw new HttpException({

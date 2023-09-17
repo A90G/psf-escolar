@@ -60,5 +60,11 @@ export class Estudiante{
     public setClase(clase: Clase []): void {
         this.clases = clase; 
     }
+    public getAsistencia(): Asistencia [] {
+        return this.asistencia; 
+    }
+    public setAsistencia(asistencia: Asistencia []): void {
+        this.asistencia = asistencia; 
+    }
 }
 
