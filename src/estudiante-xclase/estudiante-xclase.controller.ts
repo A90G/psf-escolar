@@ -17,9 +17,9 @@ export class EstudianteXclaseController {
     return await this.estudianteXclaseService.findAllOrm();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: number) : Promise<EstudianteXclase>{ // ojo como puse en el service no lleva id pero dijimos que lo ibamos a resolver en clase el cómo sacarle este dato
-    return await this.estudianteXclaseService.findById(id);
+  @Get(':claseId/:estudianteId')
+  async findOne(@Param('claseId') claseId: number, @Param('estudianteId') estudianteId: number): Promise<EstudianteXclase> {
+    return await this.estudianteXclaseService.findById(claseId, estudianteId);
   }
 
   @Post('crear')
@@ -27,14 +27,20 @@ export class EstudianteXclaseController {
     return this.estudianteXclaseService.create(createEstudianteXclaseDto);
   }
 
-  @Put('actualizar/:id')
+  @Put(':claseId/:estudianteId')
+  async update(
+    @Param('claseId') claseId: number,
+    @Param('estudianteId') estudianteId: number,
+    @Body() createEstudianteXclaseDto: CreateEstudianteXclaseDto
+  ): Promise<string> {
+    return await this.estudianteXclaseService.update(createEstudianteXclaseDto, claseId, estudianteId);
+  }
 
-    async actualizarEstudianteXclaseId(@Body() createEstudianteXclaseDto: CreateEstudianteXclaseDto, @Param('id') id: number): Promise<String> {
-        return this.estudianteXclaseService.update(createEstudianteXclaseDto,id)
-    } 
-
-  @Delete('eliminar/:id')
-  async eliminarEstudianteXclase(@Param('id')id:number) : Promise<EstudianteXclase>{
-    return await this.estudianteXclaseService.delete(id);
+@Delete(':claseId/:estudianteId')
+async delete(
+  @Param('claseId') claseId: number,
+  @Param('estudianteId') estudianteId: number
+): Promise<EstudianteXclase> {
+  return await this.estudianteXclaseService.delete(claseId, estudianteId);
 }
 }

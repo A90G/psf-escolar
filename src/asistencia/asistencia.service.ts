@@ -51,11 +51,17 @@ export class AsistenciaService {
 }
 
 //`This action returns a #${id} Asistencia`
-
-async findById(id :number) : Promise<Asistencia> {
-  try{
-      const criterio : FindOneOptions = { where: { estudiante:Estudiante} };
-      const asistencia : Asistencia = await this.asistenciaRepository.findOne( criterio );
+async findById(claseId: number, estudianteId: number): Promise<Asistencia> {
+    try {
+      const criterio: FindOneOptions = {
+        where: {
+          clase: { idClase: claseId },
+          estudiante: { id: estudianteId },
+        },
+      };
+  
+      const asistencia: Asistencia = await this.asistenciaRepository.findOne(criterio);
+ 
       if(asistencia)
           return asistencia
       else  
@@ -71,9 +77,15 @@ async findById(id :number) : Promise<Asistencia> {
 
 // `This action updates a #${id} asistencia`;
 
-  async update(createAsistenciaDto : CreateAsistenciaDto, estudiante:Estudiante) : Promise<String>{
-    try{
-        const criterio : FindOneOptions = { where : {estudiante:Estudiante} }
+async update(
+    createAsistenciaDto: CreateAsistenciaDto,
+    claseId: number,
+    estudianteId: number
+  ): Promise<string> {
+    try {
+      const criterio: FindOneOptions = {
+        where: { clase: { idClase: claseId }, estudiante: { id: estudianteId } },
+      };
         let asistencia : Asistencia = await this.asistenciaRepository.findOne(criterio);
         if(asistencia)
             throw new Error('no se pudo encontrar la asistencia a modificar ');
@@ -104,25 +116,33 @@ async findById(id :number) : Promise<Asistencia> {
 }
 
 // `This action removes a #${id} asistencia`;
-async delete(id:number): Promise<any>{
-  try{
-      const criterio : FindOneOptions = { where : {id:id} }
-      let asistencia : Asistencia = await this.asistenciaRepository.findOne(criterio);
-      if(asistencia)// aquií llevaba ! y se lo saqué ver si queda biensin 
-          throw new Error('no se pudo eliminar asistencia ');
-      else{
-          await this.asistenciaRepository.remove(asistencia);
-          return { id:id,
-                  message:'se elimino exitosamente el asistencia'
-              }
-          }
-  }
-  catch(error){
-      throw new HttpException({
-          status: HttpStatus.NOT_FOUND,
-          error: 'Error en asistencia delete - ' + error
-      },HttpStatus.NOT_FOUND)
-  }
+async delete(claseId: number, estudianteId: number): Promise<any> {
+    try {
+      const criterio: FindOneOptions = {
+        where: { clase: { idClase: claseId }, estudiante: { id: estudianteId } },
+      };
   
-}
+      const asistencia: Asistencia = await this.asistenciaRepository.findOne(
+        criterio
+      );
+  
+      if (!asistencia) {
+        throw new Error('No se pudo eliminar la asistencia');
+      }
+  
+      await this.asistenciaRepository.remove(asistencia);
+  
+      return {
+        message: 'Se eliminó exitosamente la asistencia',
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Error en asistencia delete - ' + error,
+        },
+        HttpStatus.NOT_FOUND
+      );
+    }
+  }
 }

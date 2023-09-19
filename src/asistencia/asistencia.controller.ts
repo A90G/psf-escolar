@@ -17,9 +17,9 @@ export class AsistenciaController {
     return await this.asistenciaService.findAllOrm();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: number) : Promise<Asistencia>{ // ojo como puse en el service no lleva id pero dijimos que lo ibamos a resolver en clase el cómo sacarle este dato
-    return await this.asistenciaService.findById(id);
+  @Get(':claseId/:estudianteId')
+  async findOne(@Param('claseId') claseId: number, @Param('estudianteId') estudianteId: number): Promise<Asistencia> {
+    return await this.asistenciaService.findById(claseId, estudianteId);
   }
 
   @Post('crear')
@@ -27,13 +27,20 @@ export class AsistenciaController {
     return this.asistenciaService.create(createAsistenciaDto);
   }
 
-  @Put('actualizar/:id')
-    async actualizarAsistenciaId(@Body() createAsistenciaDto: CreateAsistenciaDto, @Param('id') id: number): Promise<String> {
-        return this.asistenciaService.update(createAsistenciaDto,id)
-    } 
+  @Put(':claseId/:estudianteId')
+  async update(
+    @Param('claseId') claseId: number,
+    @Param('estudianteId') estudianteId: number,
+    @Body() createAsistenciaDto: CreateAsistenciaDto
+  ): Promise<string> {
+    return await this.asistenciaService.update(createAsistenciaDto, claseId, estudianteId);
+  }
 
-  @Delete('eliminar/:id')
-  async eliminarAsistencia(@Param('id')id:number) : Promise<Asistencia>{
-    return await this.asistenciaService.delete(id);
+@Delete(':claseId/:estudianteId')
+async delete(
+  @Param('claseId') claseId: number,
+  @Param('estudianteId') estudianteId: number
+): Promise<Asistencia> {
+  return await this.asistenciaService.delete(claseId, estudianteId);
 }
 }
