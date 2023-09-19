@@ -14,19 +14,19 @@ export class Ciudad{
     nombre:string;
 
     @OneToMany(() => Escuela, escuela => escuela.ciudad)
-    //@JoinColumn()
     public escuelas : Escuela[];
 
     @OneToMany(() => DomicilioProfesor, domicilioProfesor => domicilioProfesor.ciudad)
-    //@JoinColumn({name:"id_DomicilioProfesor" })//nombre de la columna fk
     public domicilioProfesor : DomicilioProfesor [];
 
     @OneToOne(() => DomicilioEstudiante, domicilioEstudiante => domicilioEstudiante.ciudad)
-   // @JoinColumn({name:"DomicilioEstudiante_id" })
-    public domicilioEstudiante : DomicilioEstudiante;
+    public domicilioEstudiante : DomicilioEstudiante; //suponemos que en cada ciudad puede haber un único domicilio de estudiante
 
-    constructor(nombre:string){
-        this.nombre = nombre
+    constructor(nombre:string, escuela: Escuela[], domicilioProfesor:DomicilioProfesor[], domicilioEstudiante: DomicilioEstudiante){
+        this.nombre = nombre;
+        this.escuelas = escuela;
+        this.domicilioProfesor = domicilioProfesor;
+        this.domicilioEstudiante = domicilioEstudiante;
     }
     public getId():number{
         return this.id;

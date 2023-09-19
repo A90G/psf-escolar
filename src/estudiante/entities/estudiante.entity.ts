@@ -20,8 +20,8 @@ export class Estudiante{
     @OneToMany(() => DomicilioEstudiante, domicilioEstudiantes => domicilioEstudiantes.estudiante)
     public domicilioEstudiantes : DomicilioEstudiante [];
     
-    @ManyToMany(() => Clase, clases => clases.estudiantes) // en el gráfico se observa una relación uno a muchos pero en clases decidimos ir por muchos a muchos
-    public clases: Clase[];
+    // @ManyToMany(() => Clase, clases => clases.estudiantes) // en el gráfico se observa una relación uno a muchos pero en clases decidimos ir por muchos a muchos
+    // public clases: Clase[];
 
     @ManyToMany(() => Asistencia, asistencia => asistencia.estudiante) // en el gráfico se observa una relación uno a muchos pero en clases decidimos ir por muchos a muchos
     public asistencia: Asistencia[];
@@ -29,11 +29,11 @@ export class Estudiante{
     @ManyToMany(() => EstudianteXclase, estudianteXclase => estudianteXclase.estudiante) // en el gráfico se observa una relación uno a muchos pero en clases decidimos ir por muchos a muchos
     public estudianteXclase:  EstudianteXclase [];
 
-    constructor(apellidoNombre:string, fechaNacimiento: Date, domicilioEstudiantes: DomicilioEstudiante [], clases: Clase [], asistencia: Asistencia [], estudianteXclase: EstudianteXclase []){
+    constructor(apellidoNombre:string, fechaNacimiento: Date, domicilioEstudiantes: DomicilioEstudiante [], asistencia: Asistencia [], estudianteXclase: EstudianteXclase []){
         this.apellidoNombre = apellidoNombre;
         this.fechaNacimiento = fechaNacimiento;
         this.domicilioEstudiantes = domicilioEstudiantes;
-        this.clases = clases;
+        // this.clases = clases;
         this.asistencia = asistencia;
         this.estudianteXclase = estudianteXclase;
     }
@@ -58,12 +58,12 @@ export class Estudiante{
     public setDomicilioEstudiantes(domicilioEstudiantes:DomicilioEstudiante[]){
         this.domicilioEstudiantes = domicilioEstudiantes;
     }
-    public getClase(): Clase [] {
-        return this.clases; 
-    }
-    public setClase(clase: Clase []): void {
-        this.clases = clase; 
-    }
+    // public getClase(): Clase [] {
+    //     return this.clases; 
+    // }
+    // public setClase(clase: Clase []): void {
+    //     this.clases = clase; 
+    // }
     public getAsistencia(): Asistencia [] {
         return this.asistencia; 
     }

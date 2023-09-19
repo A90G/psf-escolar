@@ -4,5 +4,5 @@ import { DomicilioProfesor } from "src/domicilio-profesor/entities/domicilio-pro
 export class CreateProfesorDto {
     readonly apellidoNombre : string;
     readonly clases: Clase[];
-    readonly domicilioProfesor : DomicilioProfesor;
+    readonly domicilioProfesor : DomicilioProfesor[];
 }

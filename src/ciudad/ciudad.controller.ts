@@ -9,17 +9,17 @@ export class CiudadController {
     constructor(private readonly ciudadService: CiudadService){}
 
     @Get('raw')
-    async getAllRaw():Promise<CiudadDTO[]>{
+    async getAllRaw():Promise<Ciudad[]>{
         return await this.ciudadService.findAllRaw();
     }
 
     @Get('orm')
-    async getAllOrm():Promise<CiudadDTO[]>{
+    async getAllOrm():Promise<Ciudad[]>{
         return await this.ciudadService.findAllOrm();
     }
 
     @Get(':id')
-    async getId(@Param('id')id:number) : Promise<CiudadDTO>{
+    async getId(@Param('id')id:number) : Promise<Ciudad>{
         return await this.ciudadService.findById(id);
     }
 

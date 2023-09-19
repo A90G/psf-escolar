@@ -7,7 +7,7 @@ import { Ciudad } from 'src/ciudad/entities/ciudad.entity';
 import { Clase } from 'src/clase/entities/clase.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Escuela, Ciudad, Clase])], // acá clase no lleva el arreglo?
+  imports:[TypeOrmModule.forFeature([Escuela, Ciudad, Clase])], 
   controllers: [EscuelaController],
   providers: [EscuelaService],
 })

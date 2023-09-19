@@ -18,7 +18,7 @@ export class ClaseService {
 
     async create(createClaseDto : CreateClaseDto) : Promise<boolean>{
       try{
-          let clase:Clase = await this.clasesRepository.save(new Clase(createClaseDto.nombre, createClaseDto.profesor, createClaseDto.escuela, createClaseDto.estudiantes, createClaseDto.asistencia, createClaseDto.estudianteXclase ));
+          let clase:Clase = await this.clasesRepository.save(new Clase(createClaseDto.nombre, createClaseDto.profesor, createClaseDto.escuela, createClaseDto.asistencia, createClaseDto.estudianteXclase ));
           if(clase)
              return true;
          else
@@ -38,7 +38,7 @@ export class ClaseService {
       let datos = await this.clasesRepository.query("select * from clases");
 
       datos.forEach(element => {
-          let clase : Clase = new Clase[(element.nombre, element.profesor, element.escuela, element.estudiante, element.asistencia, element.estudianteXclase)]; // será solución así? ver create
+          let clase : Clase = new Clase[(element.nombre, element.profesor, element.escuela, element.asistencia, element.estudianteXclase)]; 
           this.clases.push(clase)
       });
 
@@ -80,7 +80,7 @@ async findById(id :number) : Promise<Clase> {
               nombre: clase.getNombre(),
               profesor: clase.getProfesor(),
               escuela: clase.getEscuela(),
-              estudiante: clase.getEstudiante(),
+              // estudiante: clase.getEstudiante(),
               asistencia: clase.getAsistencia(),
               estudianteXclase: clase.getEstudianteXClase(),
             };
@@ -97,9 +97,9 @@ async findById(id :number) : Promise<Clase> {
               clase.setEscuela(createClaseDto.escuela);
             } 
 
-            if (createClaseDto.estudiantes !== null && createClaseDto.estudiantes !== undefined) {
-              clase.setEstudiante(createClaseDto.estudiantes);
-            } 
+            // if (createClaseDto.estudiantes !== null && createClaseDto.estudiantes !== undefined) {
+            //   clase.setEstudiante(createClaseDto.estudiantes);
+            // } 
             
             if (createClaseDto.asistencia !== null && createClaseDto.asistencia !== undefined) {
               clase.setAsistencia(createClaseDto.asistencia);

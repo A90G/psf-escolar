@@ -38,7 +38,7 @@ export class DomicilioEstudianteService {
       let datos = await this.domicilioEstudianteRepository.query("select * from DomicilioEstudiante");
 
       datos.forEach(element => {
-          let domicilioEstudiante : DomicilioEstudiante = new DomicilioEstudiante[(element.domicilio, element.ciudad, element.estudiante)]; // será solución así? ver create
+          let domicilioEstudiante : DomicilioEstudiante = new DomicilioEstudiante[(element.domicilio, element.ciudad, element.estudiante)]; 
           this.domicilioEstudiante.push(domicilioEstudiante)
       });
 
@@ -63,7 +63,7 @@ async findById(id :number) : Promise<DomicilioEstudiante> {
   catch(error){
       throw new HttpException({
           status: HttpStatus.CONFLICT,
-          error: 'Error en clase find by id - ' + error
+          error: 'Error en domicilioEstudiante find by id - ' + error
       },HttpStatus.NOT_FOUND)
   }
 }
@@ -106,11 +106,12 @@ async findById(id :number) : Promise<DomicilioEstudiante> {
 }
 
 // `This action removes a #${id} domicilioEstudiante`;
+
 async delete(id:number): Promise<any>{
   try{
       const criterio : FindOneOptions = { where : {id:id} }
       let domicilioEstudiante : DomicilioEstudiante = await this.domicilioEstudianteRepository.findOne(criterio);
-      if(domicilioEstudiante)// aquií llevaba ! y se lo saqué ver si queda biensin 
+      if(domicilioEstudiante)
           throw new Error('no se pudo eliminar DomicilioEstudiante ');
       else{
           await this.domicilioEstudianteRepository.remove(domicilioEstudiante);

@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository , FindOneOptions } from 'typeorm';
 import { CreateProfesorDto } from './dto/create-profesor.dto';
-//import { UpdateProfesorDto } from './dto/update-profesor.dto';
 import { Profesor } from './entities/profesor.entity';
 
 @Injectable()
@@ -16,16 +15,15 @@ export class ProfesorService {
     ){}
 
     /*
-  findAll() {
-    return `This action returns all profesor`;
-  }*/
+    `This action returns all profesor`;
+  */
 
     async findAllRaw():Promise<Profesor[]>{
       this.profesores = [];
       let datos = await this.profesorRepository.query("select * from profesor");
 
       datos.forEach(element => {
-          let profesor : Profesor = new Profesor(element['apellidoNombre']);
+          let profesor : Profesor = new Profesor(element.apellidoNombre, element.clases, element.domicilioProfesores);
           this.profesores.push(profesor)
       });
 
@@ -33,8 +31,7 @@ export class ProfesorService {
   }
 
 /* 
-  findOne(id: number) {
-    return `This action returns a #${id} profesor`;
+     `This action returns a #${id} profesor`;
   }*/
 
   async findAllOrm():Promise<Profesor[]>{
@@ -59,13 +56,12 @@ async findById(id :number) : Promise<Profesor> {
 }
 
   /*
-  create(createProfesorDto: CreateProfesorDto) {
-    return 'This action adds a new profesor';
+     'This action adds a new profesor';
   }*/
 
   async create(createProfesorDto : CreateProfesorDto) : Promise<boolean>{
     try{
-        let profesor : Profesor = await this.profesorRepository.save(new Profesor(createProfesorDto.apellidoNombre));
+        let profesor : Profesor = await this.profesorRepository.save(new Profesor(createProfesorDto.apellidoNombre, createProfesorDto.clases, createProfesorDto.domicilioProfesor));
         if(profesor)
            return true;
        else
@@ -79,21 +75,34 @@ async findById(id :number) : Promise<Profesor> {
     }
 }
   /*
-  update(id: number, updateProfesorDto: UpdateProfesorDto) {
-    return `This action updates a #${id} profesor`;
+     `This action updates a #${id} profesor`;
   }*/
 
   async update(createProfesorDto : CreateProfesorDto, id:number) : Promise<String>{
     try{
         const criterio : FindOneOptions = { where : {id:id} }
         let profesor : Profesor = await this.profesorRepository.findOne(criterio);
-        if(profesor) // aquií llevaba ! y se lo saqué ver si queda biensin 
-            throw new Error('no se pudo encontrar el profesro a modificar ');
+        if(profesor) 
+            throw new Error('no se pudo encontrar el profesor a modificar ');
         else{
-            let antiguoProfesor = profesor.getapellidoNombre();
+            let antiguoProfesor = {
+              apellidoNombre: profesor.getapellidoNombre(),
+              clases: profesor.getClase(),
+              domicilioProfesor: profesor.getDomicilioProfesor(),
+            };
+            if (createProfesorDto.apellidoNombre !== null && createProfesorDto.apellidoNombre !== undefined) {
+              profesor.setapellidoNombre(createProfesorDto.apellidoNombre);
+            }       
+            if (createProfesorDto.clases !== null && createProfesorDto.clases !== undefined) {
+              profesor.setClase(createProfesorDto.clases);
+            } 
+            if (createProfesorDto.domicilioProfesor !== null && createProfesorDto.domicilioProfesor !== undefined) {
+              profesor.setDomicilioProfesor(createProfesorDto.domicilioProfesor);
+            } 
+
             profesor.setapellidoNombre(createProfesorDto.apellidoNombre);
             profesor = await this.profesorRepository.save(profesor);
-            return `OK - ${antiguoProfesor} --> ${createProfesorDto.apellidoNombre}`
+            return `OK - ${antiguoProfesor} --> ${createProfesorDto.apellidoNombre}, ${createProfesorDto.clases}, ${createProfesorDto.domicilioProfesor}`
         }
     }
     catch(error){
@@ -105,14 +114,13 @@ async findById(id :number) : Promise<Profesor> {
 }
 
   /*
-  remove(id: number) {
-    return `This action removes a #${id} profesor`;
+     `This action removes a #${id} profesor`;
   }*/
   async delete(id:number): Promise<any>{
     try{
         const criterio : FindOneOptions = { where : {id:id} }
         let profesor : Profesor = await this.profesorRepository.findOne(criterio);
-        if(profesor)// aquií llevaba ! y se lo saqué ver si queda biensin 
+        if(profesor)
             throw new Error('no se eliminar profesor ');
         else{
             await this.profesorRepository.remove(profesor);

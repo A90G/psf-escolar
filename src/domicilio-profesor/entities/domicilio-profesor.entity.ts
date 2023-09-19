@@ -1,6 +1,6 @@
 import { Profesor } from "src/profesor/entities/profesor.entity"; 
 import { Ciudad } from "src/ciudad/entities/ciudad.entity";
-import { Entity,  PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Entity,  PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from "typeorm";
 
 @Entity('domicilioProfesor')
 export class DomicilioProfesor {
@@ -12,11 +12,8 @@ export class DomicilioProfesor {
     private  domicilio : string;
 
     @ManyToOne(() => Ciudad, ciudad => ciudad.domicilioProfesor)
-    @JoinColumn({name:"id_ciudad" })//nombre de la columna fk
+    @JoinColumn({name:"id_ciudad" })//el join se realiza en automático no es necesario renombrar la columna, salvo casos específicos
     public ciudad : Ciudad;
-    //@OneToOne(() => Ciudad, ciudad => ciudad.domicilioProfesor)
-    //@JoinColumn({name:"id_ciudad" })//nombre de la columna fk
-    //public ciudad : Ciudad;
 
     @ManyToOne(() => Profesor, profesor => profesor.domicilioProfesores)
     @JoinColumn({name:"id_Profesor" })
@@ -30,9 +27,6 @@ export class DomicilioProfesor {
 
     public getIdDomicilioProfesor(): number { 
         return this.idDomicilioProfesor;
-    }
-    public setIdDomicilioProfesor(idDomicilioProfesor: number): void { 
-        this.idDomicilioProfesor = idDomicilioProfesor; 
     }
     public getDomicilio(): string {
         return this.domicilio; 

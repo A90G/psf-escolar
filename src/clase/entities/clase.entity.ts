@@ -22,9 +22,9 @@ export class Clase {
     @JoinColumn({name: "id_escuela"}) // fk id escuela
     public escuela: Escuela;
 
-    @ManyToMany (()=> Estudiante, estudiantes => estudiantes.clases)
-    @JoinColumn({name: "id_estudiante"}) // fk id estudiante
-    public estudiantes: Estudiante;
+    // @ManyToMany (()=> Estudiante, estudiantes => estudiantes.clases)
+    // @JoinColumn({name: "id_estudiante"}) // fk id estudiante
+    // public estudiantes: Estudiante;
 
     @ManyToMany(() => Asistencia, asistencia => asistencia.clases) // en el gráfico se observa una relación uno a muchos pero en clases decidimos ir por muchos a muchos
     @JoinColumn({name:"id_asistencia" })
@@ -34,20 +34,17 @@ export class Clase {
     @JoinColumn({name:"id_estudianteXclase" })
     public estudianteXclase: EstudianteXclase[];
 
-    constructor (nombre : string, profesor: Profesor, escuela: Escuela, estudiantes: Estudiante, asistencia: Asistencia [], estudianteXclase: EstudianteXclase[]) { 
+    constructor (nombre : string, profesor: Profesor, escuela: Escuela,  asistencia: Asistencia [], estudianteXclase: EstudianteXclase[]) { 
         this.nombre = nombre;
         this.profesor = profesor;
         this.escuela = escuela;
-        this.estudiantes = estudiantes;
+        // this.estudiantes = estudiantes;
         this.asistencia = asistencia;
         this.estudianteXclase = estudianteXclase;
     }
 
     public getIdClase(): number { 
         return this.idClase;
-    }
-    public setIdClase(idClase: number): void { 
-        this.idClase = idClase; 
     }
     public getNombre(): string {
         return this.nombre; 
@@ -67,12 +64,12 @@ export class Clase {
     public setEscuela(escuela: Escuela): void {
         this.escuela = escuela; 
     }
-    public getEstudiante(): Estudiante{
-        return this.estudiantes; 
-    }
-    public setEstudiante(estudiantes: Estudiante): void {
-        this.estudiantes = estudiantes; 
-    }
+    // public getEstudiante(): Estudiante{
+    //     return this.estudiantes; 
+    // }
+    // public setEstudiante(estudiantes: Estudiante): void {
+    //     this.estudiantes = estudiantes; 
+    // }
     public getEstudianteXClase(): EstudianteXclase []{
         return this.estudianteXclase; 
     }

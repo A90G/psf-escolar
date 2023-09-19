@@ -20,9 +20,7 @@ export class EscuelaService {
       try{
         const escuela = await this.escuelasRepository.save(new Escuela ( 
         createEscuelaDto.nombre, createEscuelaDto.domicilio, createEscuelaDto.ciudad, createEscuelaDto.clase));
-
         if (escuela) {
-          
           return true;
         } else {
           throw new Error('No se pudo crear la nueva escuela');
@@ -35,13 +33,15 @@ export class EscuelaService {
           },HttpStatus.NOT_FOUND)
       }
   }
+
 // return `This action returns all Schools`
+
     async findAllRaw():Promise<Escuela[]>{
       this.escuelas = [];
       let datos = await this.escuelasRepository.query("select * from escuelas");
 
       datos.forEach(element => {
-          let escuela : Escuela = new Escuela[(element.nombre, element.domicilio, element.ciudad, element.clases)]; // será solución así? ver create
+          let escuela : Escuela = new Escuela[(element.nombre, element.domicilio, element.ciudad, element.clases)];
           this.escuelas.push(escuela)
       });
 
@@ -115,7 +115,7 @@ async delete(id:number): Promise<any>{
   try{
       const criterio : FindOneOptions = { where : {id:id} }
       let escuela : Escuela = await this.escuelasRepository.findOne(criterio);
-      if(escuela)// aquií llevaba ! y se lo saqué ver si queda biensin 
+      if(escuela)
           throw new Error('no se pudo eliminar escuela ');
       else{
           await this.escuelasRepository.remove(escuela);

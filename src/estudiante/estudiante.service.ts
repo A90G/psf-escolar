@@ -18,7 +18,7 @@ export class EstudianteService {
 
     async create(createEstudianteDto : CreateEstudianteDto) : Promise<boolean>{ //yo puse apellido fecha todo junto como lo indicaba el gráfico pero el profesor separó estas variantes en nombre por un lado y fecha por el otro   
       try{
-          let estudiante : Estudiante = await this.estudianteRepository.save(new Estudiante(createEstudianteDto.apellidoNombre, createEstudianteDto.fechaNacimiento, createEstudianteDto.domicilioEstudiante, createEstudianteDto.clases, createEstudianteDto.asistencia, createEstudianteDto.estudianteXclase ));
+          let estudiante : Estudiante = await this.estudianteRepository.save(new Estudiante(createEstudianteDto.apellidoNombre, createEstudianteDto.fechaNacimiento, createEstudianteDto.domicilioEstudiante, createEstudianteDto.asistencia, createEstudianteDto.estudianteXclase ));
           if(estudiante)
              return true;
          else
@@ -33,12 +33,13 @@ export class EstudianteService {
   }
 
     // return `This action returns all estudiante`
+    
     async findAllRaw():Promise<Estudiante[]>{
       this.estudiantes = [];
       let datos = await this.estudianteRepository.query("select * from estudiante");
 
       datos.forEach(element => {
-          let estudiante : Estudiante = new Estudiante(element.apellidoNombre, element.fechaNacimiento, element.domicilioEstudiante, element.clase, element.asistencia, element.estudianteXclase);
+          let estudiante : Estudiante = new Estudiante(element.apellidoNombre, element.fechaNacimiento, element.domicilioEstudiante, element.asistencia, element.estudianteXclase);
           this.estudiantes.push(estudiante)
       });
 
@@ -80,7 +81,6 @@ async findById(id :number) : Promise<Estudiante> {
                 apellidoNombre: estudiante.getapellidoNombre(), 
                 fechaNacimiento: estudiante.getfechaNacimiento(),
                 domicilioEstudiante: estudiante.getDomicilioEstudiantes(),
-                clases: estudiante.getClase(),
                 asistencia: estudiante.getAsistencia(),
                 estudianteXclase: estudiante.getEstudianteXclase(),
             };
@@ -93,9 +93,6 @@ async findById(id :number) : Promise<Estudiante> {
               if (createEstudianteDto.domicilioEstudiante !== null && createEstudianteDto.domicilioEstudiante !== undefined) {
                 estudiante.setDomicilioEstudiantes(createEstudianteDto.domicilioEstudiante);
               }       
-              if (createEstudianteDto.clases !== null && createEstudianteDto.clases !== undefined) {
-                estudiante.setClase(createEstudianteDto.clases);
-              } 
               if (createEstudianteDto.asistencia !== null && createEstudianteDto.asistencia !== undefined) {
                 estudiante.setAsistencia(createEstudianteDto.asistencia);
               }       
@@ -104,7 +101,7 @@ async findById(id :number) : Promise<Estudiante> {
               }       
               
             estudiante = await this.estudianteRepository.save(estudiante);
-            return `OK - ${antiguoEstudiante.apellidoNombre} --> ${createEstudianteDto.apellidoNombre} (${createEstudianteDto.fechaNacimiento}), (${createEstudianteDto.domicilioEstudiante}), (${createEstudianteDto.clases}), (${createEstudianteDto.asistencia})`;
+            return `OK - ${antiguoEstudiante.apellidoNombre} --> ${createEstudianteDto.apellidoNombre} (${createEstudianteDto.fechaNacimiento}), (${createEstudianteDto.domicilioEstudiante}),  (${createEstudianteDto.asistencia}),(${createEstudianteDto.estudianteXclase}),`;
         }
     catch(error){
         throw new HttpException({
@@ -115,11 +112,12 @@ async findById(id :number) : Promise<Estudiante> {
 }
 
 // `This action removes a #${id} estudiante`;
+
 async delete(id:number): Promise<any>{
   try{
       const criterio : FindOneOptions = { where : {id:id} }
       let estudiante : Estudiante = await this.estudianteRepository.findOne(criterio);
-      if(estudiante)// aquií llevaba ! y se lo saqué ver si queda biensin 
+      if(estudiante)
           throw new Error('no se pudo eliminar estudiante ');
       else{
           await this.estudianteRepository.remove(estudiante);

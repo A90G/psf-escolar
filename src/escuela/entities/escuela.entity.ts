@@ -15,26 +15,21 @@ export class Escuela {
     private    domicilio : string;
 
     @ManyToOne(() => Ciudad, ciudad => ciudad.escuelas)
-    @JoinColumn({name:"id_ciudad" })//nombre de la columna fk
+    @JoinColumn({name:"id_ciudad" })
     public ciudad : Ciudad;
 
     @OneToMany(() => Clase, clases => clases.escuela)
-    //@JoinColumn({name:"id_clase" })
-    public clases : Clase[];
+     public clases : Clase[];
 
     constructor (nombre : string, domicilio : string, ciudad : Ciudad, clases: Clase[] ) { 
-        // this.idEscuela = id;
         this.nombre = nombre;
         this.domicilio = domicilio;
         this.ciudad = ciudad;
-        this.clases = clases
+        this.clases = clases;
     }
 
     public getIdEscuela(): number { 
         return this.idEscuela;
-    }
-    public setIdEscuela(idEscuela: number): void { 
-        this.idEscuela = idEscuela; 
     }
     public getNombre(): string {
         return this.nombre; 

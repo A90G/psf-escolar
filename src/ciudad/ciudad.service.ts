@@ -14,26 +14,26 @@ export class CiudadService {
     private readonly ciudadRepository:Repository<Ciudad>
     ){}
 
-    async findAllRaw():Promise<CiudadDTO[]>{
+    async findAllRaw():Promise<Ciudad[]>{
         this.ciudades = [];
         let datos = await this.ciudadRepository.query("select * from ciudad");
 
-        datos.forEach(element => {
-            let ciudad : Ciudad = new Ciudad(element['nombre']);
+        datos.forEach((element) => {
+            let ciudad : Ciudad = new Ciudad(element.nombre, element.escuela, element.domicilioProfesor,element.domicilioEstudiante);
             this.ciudades.push(ciudad)
         });
 
         return this.ciudades;
     }
 
-    async findAllOrm():Promise<CiudadDTO[]>{
-        return await this.ciudadRepository.find(); //lo que retorna es un dto
+    async findAllOrm():Promise<Ciudad[]>{
+        return await this.ciudadRepository.find(); //lo que retorna es un dto, ver por qué en clases pusimos todo como DTO
     }
 
-    async findById(id :number) : Promise<CiudadDTO> {
+    async findById(id :number) : Promise<Ciudad> {
         try{
             const criterio : FindOneOptions = { where: { id:id} };
-            const ciudad : CiudadDTO = await this.ciudadRepository.findOne( criterio );
+            const ciudad : Ciudad = await this.ciudadRepository.findOne( criterio );
             if(ciudad)
                 return ciudad
             else  
@@ -50,7 +50,7 @@ export class CiudadService {
 
     async create(ciudadDTO : CiudadDTO) : Promise<boolean>{
         try{
-            let ciudad : Ciudad = await this.ciudadRepository.save(new Ciudad(ciudadDTO.nombre));
+            let ciudad : Ciudad = await this.ciudadRepository.save(new Ciudad(ciudadDTO.nombre, ciudadDTO.escuela, ciudadDTO.domicilioProfesor, ciudadDTO.domicilioEstudiante));
             if(ciudad)
                return true;
            else
@@ -72,10 +72,15 @@ export class CiudadService {
             if(!ciudad)
                 throw new Error('no se pudo encontrar la ciudad a modificar ');
             else{
-                let ciudadVieja = ciudad.getNombre();
+                let ciudadVieja = {
+                    nombre: ciudad.getNombre(),
+                    escuela: ciudad.getEscuela(),
+                    domicilioProfesor: ciudad.getDomicilioProfesor(),
+                    domicilioEstudiante: ciudad.getDomicilioEstudiante(),
+                  };
                 ciudad.setNombre(ciudadDTO.nombre);
                 ciudad = await this.ciudadRepository.save(ciudad);
-                return `OK - ${ciudadVieja} --> ${ciudadDTO.nombre}`
+                return `OK - ${ciudadVieja} --> ${ciudadDTO.nombre}, ${ciudadDTO.escuela}, ${ciudadDTO.domicilioProfesor}, ${ciudadDTO.domicilioEstudiante}`
             }
         }
         catch(error){
@@ -110,46 +115,3 @@ export class CiudadService {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*import { Injectable } from '@nestjs/common';
-import { CreateCiudadDto } from './dto/create-ciudad.dto';
-import { UpdateCiudadDto } from './dto/update-ciudad.dto';
-
-@Injectable()
-export class CiudadService {
-  create(createCiudadDto: CreateCiudadDto) {
-    return 'This action adds a new ciudad';
-  }
-
-  findAll() {
-    return `This action returns all ciudad`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} ciudad`;
-  }
-
-  update(id: number, updateCiudadDto: UpdateCiudadDto) {
-    return `This action updates a #${id} ciudad`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} ciudad`;
-  }
-}*/

@@ -28,9 +28,6 @@ export class DomicilioEstudiante {
     public getIdDomicilioEstudiante(): number { 
         return this.idDomicilioEstudiante;
     }
-    public setIdDomicilioEstudiante(idDomicilioEstudiante: number): void { 
-        this.idDomicilioEstudiante = idDomicilioEstudiante; 
-    }
     public getDomicilio(): string {
         return this.domicilio; 
     }

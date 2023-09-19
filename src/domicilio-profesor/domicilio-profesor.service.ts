@@ -9,7 +9,7 @@ import { DomicilioProfesor } from './entities/domicilio-profesor.entity';
 
 export class DomicilioProfesorService {
 
-  private domicilioProfesor: DomicilioProfesor[] = []; // entendiendo que un profesor puede tener varios domicilios, van configuraciones de arreglo
+  private domicilioProfesor: DomicilioProfesor[] = []; // entendiendo que un profesor puede tener varios domicilios
 
   constructor(
     @InjectRepository(DomicilioProfesor)
@@ -22,9 +22,7 @@ export class DomicilioProfesorService {
       try{
         const domicilioProfesor = await this.domicilioProfesorsRepository.save(new DomicilioProfesor( 
           createDomicilioProfesorDto.domicilio, createDomicilioProfesorDto.ciudad, createDomicilioProfesorDto.profesor));
-
         if (domicilioProfesor) {
-          
           return true;
         } else {
           throw new Error('No se pudo crear el nuevo domicilio');
@@ -33,17 +31,19 @@ export class DomicilioProfesorService {
       catch(error){
           throw new HttpException({
               status: HttpStatus.NOT_FOUND,
-              error: 'Error en el nuevo domicilio create - ' + error
+              error: 'Error en el nuevo domicilio del create - ' + error
           },HttpStatus.NOT_FOUND)
       }
   }
-// return `This action returns all adressTeacher`
+
+//`This action returns all adressTeacher`
+
     async findAllRaw():Promise<DomicilioProfesor[]>{
       this.domicilioProfesor = [];
       let datos = await this.domicilioProfesorsRepository.query("select * from domicilioProfesor");
 
       datos.forEach(element => {
-          let domicilioProfesor : DomicilioProfesor = new DomicilioProfesor[(element.domicilio, element.ciudad, element.profesor)]; // será solución así? ver create
+          let domicilioProfesor : DomicilioProfesor = new DomicilioProfesor[(element.domicilio, element.ciudad, element.profesor)];
           this.domicilioProfesor.push(domicilioProfesor)
       });
 
@@ -59,16 +59,16 @@ export class DomicilioProfesorService {
 async findById(id :number) : Promise<DomicilioProfesor> {
   try{
       const criterio : FindOneOptions = { where: { id:id} };
-      const escuela : DomicilioProfesor = await this.domicilioProfesorsRepository.findOne( criterio );
-      if(escuela)
-          return escuela
+      const domicilioProfesor : DomicilioProfesor = await this.domicilioProfesorsRepository.findOne( criterio );
+      if(domicilioProfesor)
+          return domicilioProfesor
       else  
-          throw new Error('No se encuentra la escuela');
+          throw new Error('No se encuentra el domicilioProfesor');
   }
   catch(error){
       throw new HttpException({
           status: HttpStatus.CONFLICT,
-          error: 'Error en escuela find by id - ' + error
+          error: 'Error en el domicilioProfesor find by id - ' + error
       },HttpStatus.NOT_FOUND)
   }
 }
@@ -80,7 +80,7 @@ async update(createDomicilioProfesorDto : CreateDomicilioProfesorDto, id:number)
       const criterio : FindOneOptions = { where : {id:id} };
       let domicilioProfesor : DomicilioProfesor = await this.domicilioProfesorsRepository.findOne(criterio);
       if(domicilioProfesor)
-          throw new Error('no se pudo encontrar el domicilio a modificar ');
+          throw new Error('no se pudo encontrar el domicilioProfesor a modificar ');
           const domicilioProfesorAntiguo = {
             domicilio: domicilioProfesor.getDomicilio(),
             ciudad: domicilioProfesor.getCiudad(),
@@ -97,8 +97,8 @@ async update(createDomicilioProfesorDto : CreateDomicilioProfesorDto, id:number)
             domicilioProfesor.setCiudad(createDomicilioProfesorDto.ciudad);
           } 
     
-          domicilioProfesor = await this.domicilioProfesorsRepository.save(domicilioProfesor); // acá no tengo nombre por eso llamo el antiguo por domicilio o será mejor hacerlo por id?
-          return `OK - ${domicilioProfesorAntiguo.domicilio} --> ${createDomicilioProfesorDto.domicilio} (${createDomicilioProfesorDto.ciudad}),(${createDomicilioProfesorDto.profesor})`;
+          domicilioProfesor = await this.domicilioProfesorsRepository.save(domicilioProfesor); // acá no tengo nombre por eso llamo el antiguo por domicilio o será mejor hacerlo diferente?
+          return `OK el antiguo domicilio es: - ${domicilioProfesorAntiguo.domicilio} --> que fue corregido por ${createDomicilioProfesorDto.domicilio}, (${createDomicilioProfesorDto.ciudad}),(${createDomicilioProfesorDto.profesor})`;
       }
   catch(error){
       throw new HttpException({
@@ -110,11 +110,12 @@ async update(createDomicilioProfesorDto : CreateDomicilioProfesorDto, id:number)
 
 
 // `This action removes a #${id} domicilioProfesor`;
+
 async delete(id:number): Promise<any>{
   try{
       const criterio : FindOneOptions = { where : {id:id} }
       let domicilioProfesor : DomicilioProfesor = await this.domicilioProfesorsRepository.findOne(criterio);
-      if(domicilioProfesor)// aquií llevaba ! y se lo saqué ver si queda biensin 
+      if(domicilioProfesor)
           throw new Error('no se pudo eliminar escuela ');
       else{
           await this.domicilioProfesorsRepository.remove(domicilioProfesor);
@@ -129,6 +130,5 @@ async delete(id:number): Promise<any>{
           error: 'Error en domicilioProfesor delete - ' + error
       },HttpStatus.NOT_FOUND)
   }
-  
 }
 }

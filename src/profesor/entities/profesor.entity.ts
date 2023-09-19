@@ -17,12 +17,13 @@ export class Profesor{
     public clases: Clase[];
 
     @OneToMany(() => DomicilioProfesor, domicilioProfesores => domicilioProfesores.profesor)
-    //@JoinColumn({name:"id_domicilioProfesor" })
     public domicilioProfesores : DomicilioProfesor [];
 
 
-    constructor(apellidoNombre:string){
-        this.apellidoNombre = apellidoNombre
+    constructor(apellidoNombre:string, clases: Clase[], domicilioProfesores: DomicilioProfesor[]){
+        this.apellidoNombre = apellidoNombre;
+        this.clases = clases;
+        this.domicilioProfesores = domicilioProfesores;
     }
     public getId():number{
         return this.id;
