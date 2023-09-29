@@ -75,7 +75,7 @@ async findById(id :number) : Promise<Estudiante> {
     try{
         const criterio : FindOneOptions = { where : {id:id} }
         let estudiante : Estudiante = await this.estudianteRepository.findOne(criterio);
-        if(estudiante)
+        if(!estudiante)
             throw new Error('no se pudo encontrar el estudiante a modificar ');
             let antiguoEstudiante = { 
                 apellidoNombre: estudiante.getapellidoNombre(), 
@@ -117,7 +117,7 @@ async delete(id:number): Promise<any>{
   try{
       const criterio : FindOneOptions = { where : {id:id} }
       let estudiante : Estudiante = await this.estudianteRepository.findOne(criterio);
-      if(estudiante)
+      if(!estudiante)
           throw new Error('no se pudo eliminar estudiante ');
       else{
           await this.estudianteRepository.remove(estudiante);

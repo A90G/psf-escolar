@@ -74,7 +74,7 @@ async findById(id :number) : Promise<Clase> {
     try{
         const criterio : FindOneOptions = { where : {id:id} };
         let clase : Clase = await this.clasesRepository.findOne(criterio);
-        if(clase)
+        if(!clase)
             throw new Error('no se pudo encontrar la clase a modificar ');
             const antiguaClase = {
               nombre: clase.getNombre(),
@@ -124,7 +124,7 @@ async delete(id:number): Promise<any>{
   try{
       const criterio : FindOneOptions = { where : {id:id} }
       let clase : Clase = await this.clasesRepository.findOne(criterio);
-      if(clase)// aquií llevaba ! y se lo saqué ver si queda biensin 
+      if(!clase)
           throw new Error('no se pudo eliminar la clase ');
       else{
           await this.clasesRepository.remove(clase);

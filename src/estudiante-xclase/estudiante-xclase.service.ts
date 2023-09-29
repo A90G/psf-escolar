@@ -85,7 +85,7 @@ import { EstudianteXclase } from './entities/estudiante-xclase.entity';
         where: { clase: { idClase: claseId }, estudiante: { id: estudianteId } },
       };
           let estudianteXclase : EstudianteXclase = await this.estudianteXclaseRepository.findOne(criterio);
-          if(estudianteXclase)
+          if(!estudianteXclase)
               throw new Error('no se pudo encontrar la asistencia a modificar ');
               let antiguaEstudianteXclase = { 
                   clase: estudianteXclase.getClase(),

@@ -87,7 +87,7 @@ async update(
         where: { clase: { idClase: claseId }, estudiante: { id: estudianteId } },
       };
         let asistencia : Asistencia = await this.asistenciaRepository.findOne(criterio);
-        if(asistencia)
+        if(!asistencia)
             throw new Error('no se pudo encontrar la asistencia a modificar ');
             let antiguaAsistencia = { 
                 fecha: asistencia.getFecha(),  

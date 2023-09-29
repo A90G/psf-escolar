@@ -82,7 +82,7 @@ async findById(id :number) : Promise<Profesor> {
     try{
         const criterio : FindOneOptions = { where : {id:id} }
         let profesor : Profesor = await this.profesorRepository.findOne(criterio);
-        if(profesor) 
+        if(!profesor) 
             throw new Error('no se pudo encontrar el profesor a modificar ');
         else{
             let antiguoProfesor = {
@@ -120,7 +120,7 @@ async findById(id :number) : Promise<Profesor> {
     try{
         const criterio : FindOneOptions = { where : {id:id} }
         let profesor : Profesor = await this.profesorRepository.findOne(criterio);
-        if(profesor)
+        if(!profesor)
             throw new Error('no se eliminar profesor ');
         else{
             await this.profesorRepository.remove(profesor);

@@ -79,7 +79,7 @@ async update(createDomicilioProfesorDto : CreateDomicilioProfesorDto, id:number)
   try{
       const criterio : FindOneOptions = { where : {id:id} };
       let domicilioProfesor : DomicilioProfesor = await this.domicilioProfesorsRepository.findOne(criterio);
-      if(domicilioProfesor)
+      if(!domicilioProfesor)
           throw new Error('no se pudo encontrar el domicilioProfesor a modificar ');
           const domicilioProfesorAntiguo = {
             domicilio: domicilioProfesor.getDomicilio(),
@@ -115,7 +115,7 @@ async delete(id:number): Promise<any>{
   try{
       const criterio : FindOneOptions = { where : {id:id} }
       let domicilioProfesor : DomicilioProfesor = await this.domicilioProfesorsRepository.findOne(criterio);
-      if(domicilioProfesor)
+      if(!domicilioProfesor)
           throw new Error('no se pudo eliminar escuela ');
       else{
           await this.domicilioProfesorsRepository.remove(domicilioProfesor);

@@ -18,8 +18,8 @@ import { AsistenciaModule } from './asistencia/asistencia.module';
     "host": "localhost",
     "port": 3306,
     "username":"root",
-    "password":"motorola",
-    "database":"db_colegio",
+    "password":"desarrollador",
+    "database":"db_psf",
     "entities": [__dirname + "/**/**/**.entity{.ts,.js}"],
     "synchronize": true //modo desarrollador.
 

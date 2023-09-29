@@ -77,7 +77,7 @@ async update(createEscuelaDto : CreateEscuelaDto, id:number) : Promise<string>{
   try{
       const criterio : FindOneOptions = { where : {id:id} };
       let escuela : Escuela = await this.escuelasRepository.findOne(criterio);
-      if(escuela)
+      if(!escuela)
           throw new Error('no se pudo encontrar la escuela a modificar ');
           const antiguaEscuela = {
             nombre: escuela.getNombre(),
@@ -115,7 +115,7 @@ async delete(id:number): Promise<any>{
   try{
       const criterio : FindOneOptions = { where : {id:id} }
       let escuela : Escuela = await this.escuelasRepository.findOne(criterio);
-      if(escuela)
+      if(!escuela)
           throw new Error('no se pudo eliminar escuela ');
       else{
           await this.escuelasRepository.remove(escuela);
