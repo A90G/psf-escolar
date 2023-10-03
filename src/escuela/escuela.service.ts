@@ -36,34 +36,53 @@ export class EscuelaService {
 
 // return `This action returns all Schools`
 
-    async findAllRaw():Promise<Escuela[]>{
-      this.escuelas = [];
-      let datos = await this.escuelasRepository.query("select * from escuelas");
-
-      datos.forEach(element => {
-          let escuela : Escuela = new Escuela[(element.nombre, element.domicilio, element.ciudad, element.clases)];
-          this.escuelas.push(escuela)
-      });
-
-      return this.escuelas;
-  }
-
+    async findAllRaw():Promise<CreateEscuelaDto[]>{
+      try {
+        const datos = await this.escuelasRepository.query("select * from escuela");
+        const  escuelas : CreateEscuelaDto[] = [];
+      for (const element of datos) {
+        const escuela: CreateEscuelaDto = {
+          nombre: element.nombre, 
+          domicilio: element.domicilio, 
+          ciudad: element.ciudad, 
+          clase: element.clase, 
+        };
+        escuelas.push(escuela);
+      }
+    
+      return escuelas;
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Error en findAllRaw - ' + error,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+    }
   async findAllOrm():Promise<Escuela[]>{
     return await this.escuelasRepository.find();
 }
 
 //`This action returns a #${id} escuela`
 
-async findById(id :number) : Promise<Escuela> {
+async findById(id :number) : Promise<CreateEscuelaDto> {
   try{
-      const criterio : FindOneOptions = { where: { id:id} };
-      const escuela : Escuela = await this.escuelasRepository.findOne( criterio );
-      if(escuela)
-          return escuela
-      else  
-          throw new Error('No se encuentra la escuela');
-  }
-  catch(error){
+    const criterio : FindOneOptions = { where: { id:id} };
+    const escuela : Escuela  = await this.escuelasRepository.findOne( criterio );
+    if (escuela) {
+      const createEscuelaDto: CreateEscuelaDto = {
+        nombre: escuela.getNombre(),
+        domicilio: escuela.getDomicilio(),
+        ciudad: escuela.getCiudad(),
+        clase: escuela.getClase(),
+      };
+      return createEscuelaDto;
+    } else {
+      throw new Error('No se encuentra la escuela');
+    }
+  }  catch(error){
       throw new HttpException({
           status: HttpStatus.CONFLICT,
           error: 'Error en escuela find by id - ' + error

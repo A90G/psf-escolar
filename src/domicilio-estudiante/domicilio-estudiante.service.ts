@@ -33,17 +33,30 @@ export class DomicilioEstudianteService {
   }
 
     // return `This action returns all domicilioEstudiante`
-    async findAllRaw():Promise<DomicilioEstudiante []>{
-      this.domicilioEstudiante = [];
-      let datos = await this.domicilioEstudianteRepository.query("select * from DomicilioEstudiante");
-
-      datos.forEach(element => {
-          let domicilioEstudiante : DomicilioEstudiante = new DomicilioEstudiante[(element.domicilio, element.ciudad, element.estudiante)]; 
-          this.domicilioEstudiante.push(domicilioEstudiante)
-      });
-
-      return this.domicilioEstudiante;
-  }
+    async findAllRaw():Promise<CreateDomicilioEstudianteDto []>{
+      try {
+        const datos = await this.domicilioEstudianteRepository.query("select * from DomicilioEstudiante");
+        const CreateDomicilioEstudianteDto: CreateDomicilioEstudianteDto[] = [];
+      for (const element of datos) {
+        const domicilioEstudiante: CreateDomicilioEstudianteDto = {
+          domicilio: element.domicilio,
+          ciudad: element.ciudad,
+          estudiante: element.estudiante,
+        };
+        CreateDomicilioEstudianteDto.push(domicilioEstudiante);
+      }
+    
+      return CreateDomicilioEstudianteDto;
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Error en findAllRaw - ' + error,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+    }
 
   async findAllOrm():Promise<DomicilioEstudiante[]>{
     return await this.domicilioEstudianteRepository.find();
@@ -51,16 +64,21 @@ export class DomicilioEstudianteService {
 
 //`This action returns a #${id} DomicilioEstudiante`
 
-async findById(id :number) : Promise<DomicilioEstudiante> {
+async findById(id :number) : Promise<CreateDomicilioEstudianteDto> {
   try{
       const criterio : FindOneOptions = { where: { id:id} };
       const domicilioEstudiante : DomicilioEstudiante = await this.domicilioEstudianteRepository.findOne( criterio );
-      if(domicilioEstudiante)
-          return domicilioEstudiante
-      else  
-          throw new Error('No se encuentra el domicilioEstudiante');
-  }
-  catch(error){
+      if (domicilioEstudiante) {
+        const createDomicilioEstudianteDto: CreateDomicilioEstudianteDto = {
+          domicilio: domicilioEstudiante.getDomicilio(),
+          ciudad: domicilioEstudiante.getCiudad(),
+          estudiante: domicilioEstudiante.getEstudiante(),
+        };
+        return createDomicilioEstudianteDto;
+      } else {
+        throw new Error('No se encuentra la clase');
+      } 
+    } catch(error){
       throw new HttpException({
           status: HttpStatus.CONFLICT,
           error: 'Error en domicilioEstudiante find by id - ' + error

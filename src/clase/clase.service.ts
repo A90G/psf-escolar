@@ -33,17 +33,32 @@ export class ClaseService {
   }
 
     // return `This action returns all classes`
-    async findAllRaw():Promise<Clase[]>{
-      this.clases = [];
-      let datos = await this.clasesRepository.query("select * from clases");
-
-      datos.forEach(element => {
-          let clase : Clase = new Clase[(element.nombre, element.profesor, element.escuela, element.asistencia, element.estudianteXclase)]; 
-          this.clases.push(clase)
-      });
-
-      return this.clases;
-  }
+    async findAllRaw():Promise<CreateClaseDto[]>{
+      try {
+        const datos = await this.clasesRepository.query("select * from clases");
+        const  clases : CreateClaseDto[] = [];
+      for (const element of datos) {
+        const clase: CreateClaseDto = {
+          nombre: element.nombre, 
+          profesor: element.profesor, 
+          escuela: element.escuela, 
+          asistencia: element.asistencia, 
+          estudianteXclase: element.estudianteXclase,
+        };
+        clases.push(clase);
+      }
+    
+      return clases;
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Error en findAllRaw - ' + error,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+    }
 
   async findAllOrm():Promise<Clase[]>{
     return await this.clasesRepository.find();
@@ -51,16 +66,23 @@ export class ClaseService {
 
 //`This action returns a #${id} clase`
 
-async findById(id :number) : Promise<Clase> {
+async findById(id :number) : Promise<CreateClaseDto> {
   try{
       const criterio : FindOneOptions = { where: { id:id} };
-      const clase : Clase = await this.clasesRepository.findOne( criterio );
-      if(clase)
-          return clase
-      else  
-          throw new Error('No se encuentra la clase');
-  }
-  catch(error){
+      const clase : Clase  = await this.clasesRepository.findOne( criterio );
+      if (clase) {
+        const createClaseDto: CreateClaseDto = {
+          nombre: clase.getNombre(), 
+          profesor: clase.getProfesor(), 
+          escuela: clase.getEscuela(), 
+          asistencia: clase.getAsistencia(), 
+          estudianteXclase: clase.getEstudianteXClase(),
+        };
+        return createClaseDto;
+      } else {
+        throw new Error('No se encuentra la clase');
+      }
+    } catch(error){
       throw new HttpException({
           status: HttpStatus.CONFLICT,
           error: 'Error en clase find by id - ' + error

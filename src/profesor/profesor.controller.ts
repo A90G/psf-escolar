@@ -9,7 +9,7 @@ export class ProfesorController {
     constructor(private readonly profesorService: ProfesorService){}
 
     @Get('raw')
-    async getAllRaw():Promise<Profesor[]>{
+    async getAllRaw():Promise<CreateProfesorDto[]>{
         return await this.profesorService.findAllRaw();
     }
 
@@ -19,7 +19,7 @@ export class ProfesorController {
     }
 
     @Get(':id')
-    async getId(@Param('id')id:number) : Promise<Profesor>{
+    async getId(@Param('id')id:number) : Promise<CreateProfesorDto>{
         return await this.profesorService.findById(id);
     }
 

@@ -1,7 +1,6 @@
 import { CreateEstudianteXclaseDto } from './dto/create-estudiante-xclase.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Estudiante } from 'src/estudiante/entities/estudiante.entity';
 import { Repository , FindOneOptions } from 'typeorm';
 import { EstudianteXclase } from './entities/estudiante-xclase.entity';
 
@@ -33,17 +32,30 @@ import { EstudianteXclase } from './entities/estudiante-xclase.entity';
     }
   
       // return `This action returns all EstudianteXclase`
-      async findAllRaw():Promise<EstudianteXclase[]>{
-        this.estudianteXclase = [];
-        let datos = await this.estudianteXclaseRepository.query("select * from estudianteXclase");
+      async findAllRaw():Promise<CreateEstudianteXclaseDto[]>{
+        try {
+          const datos = await this.estudianteXclaseRepository.query("select * from estudianteXclase");
+          const  estudiantesXclases : CreateEstudianteXclaseDto[] = [];
+        for (const element of datos) {
+          const estudianteXclase: CreateEstudianteXclaseDto = {
+         clases:element.clase,
+         estudiante: element.estudiante,
+          };
+          estudiantesXclases.push(estudianteXclase);
+        }
+      
+        return estudiantesXclases;
+      } catch (error) {
+        throw new HttpException(
+          {
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: 'Error en findAllRaw - ' + error,
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
+      }
   
-        datos.forEach(element => {
-            let estudianteXclase : EstudianteXclase = new EstudianteXclase(element.clase, element.estudiante);
-            this.estudianteXclase.push(estudianteXclase)
-        });
-  
-        return this.estudianteXclase;
-    }
   
     async findAllOrm():Promise<EstudianteXclase[]>{
       return await this.estudianteXclaseRepository.find();
@@ -51,7 +63,7 @@ import { EstudianteXclase } from './entities/estudiante-xclase.entity';
   
   //`This action returns a #${id} EstudianteXclase`
   
-  async findById(claseId: number, estudianteId: number): Promise<EstudianteXclase> {
+  async findById(claseId: number, estudianteId: number): Promise<CreateEstudianteXclaseDto> {
     try {
       const criterio: FindOneOptions = {
         where: {
@@ -59,13 +71,17 @@ import { EstudianteXclase } from './entities/estudiante-xclase.entity';
           estudiante: { id: estudianteId },
         },
       };
-        const estudianteXclase : EstudianteXclase = await this.estudianteXclaseRepository.findOne( criterio );
-        if(estudianteXclase)
-            return estudianteXclase
-        else  
-            throw new Error('No se encuentra estudianteXclase');
+        const estudianteXclase : EstudianteXclase  = await this.estudianteXclaseRepository.findOne( criterio );
+        if (estudianteXclase) {
+          const createEstudianteXclaseDto: CreateEstudianteXclaseDto = {
+            clases: estudianteXclase.getClase(),
+            estudiante: estudianteXclase.getEstudiante()
+          };
+          return createEstudianteXclaseDto;
+        } else {
+          throw new Error('No se encuentra el estudianteXclase');
     }
-    catch(error){
+  }catch(error){
         throw new HttpException({
             status: HttpStatus.CONFLICT,
             error: 'Error en  find by estudianteXclase - ' + error

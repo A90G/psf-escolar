@@ -9,7 +9,7 @@ export class EstudianteXclaseController {
 
  
   @Get('raw')
-  async getAllRaw():Promise<EstudianteXclase[]>{
+  async getAllRaw():Promise<CreateEstudianteXclaseDto[]>{
     return await this.estudianteXclaseService.findAllRaw();}
 
   @Get('orm')
@@ -18,7 +18,7 @@ export class EstudianteXclaseController {
   }
 
   @Get(':claseId/:estudianteId')
-  async findOne(@Param('claseId') claseId: number, @Param('estudianteId') estudianteId: number): Promise<EstudianteXclase> {
+  async findOne(@Param('claseId') claseId: number, @Param('estudianteId') estudianteId: number): Promise<CreateEstudianteXclaseDto> {
     return await this.estudianteXclaseService.findById(claseId, estudianteId);
   }
 

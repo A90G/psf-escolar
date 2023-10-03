@@ -18,17 +18,30 @@ export class ProfesorService {
     `This action returns all profesor`;
   */
 
-    async findAllRaw():Promise<Profesor[]>{
-      this.profesores = [];
-      let datos = await this.profesorRepository.query("select * from profesor");
-
-      datos.forEach(element => {
-          let profesor : Profesor = new Profesor(element.apellidoNombre, element.clases, element.domicilioProfesores);
-          this.profesores.push(profesor)
-      });
-
-      return this.profesores;
-  }
+    async findAllRaw():Promise<CreateProfesorDto[]>{
+      try {
+        const datos = await this.profesorRepository.query("select * from profesores");
+        const  profesores : CreateProfesorDto[] = [];
+      for (const element of datos) {
+        const profesor: CreateProfesorDto = {
+          apellidoNombre: element.apellidoNombre, 
+          clases: element.clase, 
+          domicilioProfesor: element.domicilioProfesor, 
+        };
+        profesores.push(profesor);
+      }
+    
+      return profesores;
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Error en findAllRaw - ' + error,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+    }
 
 /* 
      `This action returns a #${id} profesor`;
@@ -38,16 +51,21 @@ export class ProfesorService {
     return await this.profesorRepository.find();
 }
 
-async findById(id :number) : Promise<Profesor> {
+async findById(id :number) : Promise<CreateProfesorDto> {
   try{
       const criterio : FindOneOptions = { where: { id:id} };
-      const profesor : Profesor = await this.profesorRepository.findOne( criterio );
-      if(profesor)
-          return profesor
-      else  
-          throw new Error('No se encuentra el profesor');
-  }
-  catch(error){
+      const profesor : Profesor  = await this.profesorRepository.findOne( criterio );
+      if (profesor) {
+        const createProfesorDto: CreateProfesorDto = {
+          apellidoNombre: profesor.getapellidoNombre(),
+          clases: profesor.getClase(),
+          domicilioProfesor: profesor.getDomicilioProfesor(),
+        };
+        return createProfesorDto;
+      } else {
+        throw new Error('No se encuentra el profesor');
+      }
+    }catch(error){
       throw new HttpException({
           status: HttpStatus.CONFLICT,
           error: 'Error en profesor find by id - ' + error

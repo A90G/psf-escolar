@@ -9,7 +9,7 @@ export class EstudianteController {
   constructor(private readonly estudianteService: EstudianteService) {}
 
     @Get('raw')
-    async getAllRaw():Promise<Estudiante[]>{
+    async getAllRaw():Promise<CreateEstudianteDto[]>{
         return await this.estudianteService.findAllRaw();
     }
 
@@ -19,7 +19,7 @@ export class EstudianteController {
     }
 
     @Get(':id')
-    async getId(@Param('id')id:number) : Promise<Estudiante>{
+    async getId(@Param('id')id:number) : Promise<CreateEstudianteDto>{
         return await this.estudianteService.findById(id);
     }
 

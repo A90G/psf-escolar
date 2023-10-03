@@ -7,7 +7,7 @@ import { CiudadDTO } from './dto/create-ciudad.dto';
 @Injectable()
 export class CiudadService {
 
-    private ciudades:Ciudad[] = [];
+    private ciudades:CiudadDTO[] = [];
 
     constructor(
     @InjectRepository(Ciudad)
@@ -19,21 +19,21 @@ export class CiudadService {
         let datos = await this.ciudadRepository.query("select * from ciudad");
 
         datos.forEach(element => {
-            let ciudad : Ciudad = new Ciudad[(element.nombre, element.escuela, element.domicilioProfesor,element.domicilioEstudiante)];
+            let ciudad : CiudadDTO = new CiudadDTO[(element.nombre, element.escuela, element.domicilioProfesor,element.domicilioEstudiante)];
             this.ciudades.push(ciudad)
         });
 
         return this.ciudades;
     }
 
-    async findAllOrm():Promise<CiudadDTO[]>{
+    async findAllOrm():Promise<Ciudad[]>{
         return await this.ciudadRepository.find(); 
     }
 
     async findById(id :number) : Promise<CiudadDTO> {
         try{
             const criterio : FindOneOptions = { where: { id:id} };
-            const ciudad : Ciudad = await this.ciudadRepository.findOne( criterio );
+            const ciudad : CiudadDTO = await this.ciudadRepository.findOne( criterio );
             if(ciudad)
                 return ciudad
             else  

@@ -7,7 +7,7 @@ export class ClaseController {
   constructor(private readonly claseService: ClaseService) {}
 
   @Get('raw')
-  async getAllRaw():Promise<Clase[]>{
+  async getAllRaw():Promise<CreateClaseDto[]>{
     return await this.claseService.findAllRaw(); // si abro parentesis y coloco relations:Estudiantes me va a traer todos los estudiantes por clase, es decir puedo establecer un criterio de búsqueda específico
   }
 
@@ -17,7 +17,7 @@ export class ClaseController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number) : Promise<Clase>{
+  async findOne(@Param('id') id: number) : Promise<CreateClaseDto>{
     return await this.claseService.findById(id);
   }
 

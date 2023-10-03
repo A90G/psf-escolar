@@ -14,7 +14,7 @@ export class CiudadController {
     }
 
     @Get('orm')
-    async getAllOrm():Promise<CiudadDTO[]>{
+    async getAllOrm():Promise<Ciudad[]>{
         return await this.ciudadService.findAllOrm();
     }
 

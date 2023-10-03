@@ -9,16 +9,16 @@ export class AsistenciaController {
   constructor(private readonly asistenciaService: AsistenciaService) {}
 
   @Get('raw')
-  async getAllRaw():Promise<Asistencia[]>{
+  async getAllRaw():Promise<CreateAsistenciaDto[]>{
     return await this.asistenciaService.findAllRaw();}
 
   @Get('orm')
-  async getAllOrm():Promise<Asistencia[]>{
+  async getAllOrm():Promise<CreateAsistenciaDto[]>{
     return await this.asistenciaService.findAllOrm();
   }
 
   @Get(':claseId/:estudianteId')
-  async findOne(@Param('claseId') claseId: number, @Param('estudianteId') estudianteId: number): Promise<Asistencia> {
+  async findOne(@Param('claseId') claseId: number, @Param('estudianteId') estudianteId: number): Promise<CreateAsistenciaDto> {
     return await this.asistenciaService.findById(claseId, estudianteId);
   }
 

@@ -34,34 +34,56 @@ export class EstudianteService {
 
     // return `This action returns all estudiante`
     
-    async findAllRaw():Promise<Estudiante[]>{
-      this.estudiantes = [];
-      let datos = await this.estudianteRepository.query("select * from estudiante");
-
-      datos.forEach(element => {
-          let estudiante : Estudiante = new Estudiante(element.apellidoNombre, element.fechaNacimiento, element.domicilioEstudiante, element.asistencia, element.estudianteXclase);
-          this.estudiantes.push(estudiante)
-      });
-
-      return this.estudiantes;
+async findAllRaw():Promise<CreateEstudianteDto[]>{
+  try {
+    const datos = await this.estudianteRepository.query("select * from estudiante");
+    const  estudiantes : CreateEstudianteDto[] = [];
+  for (const element of datos) {
+    const estudiante: CreateEstudianteDto = {
+      apellidoNombre: element.apellidoNombre, 
+      fechaNacimiento: element.fechaNacimiento,
+      domicilioEstudiante: element.domicilioEstudiante,
+      asistencia: element.asistencia,
+      estudianteXclase: element.estudianteXclase,
+    };
+    estudiantes.push(estudiante);
   }
 
-  async findAllOrm():Promise<Estudiante[]>{
+  return estudiantes;
+} catch (error) {
+  throw new HttpException(
+    {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      error: 'Error en findAllRaw - ' + error,
+    },
+    HttpStatus.INTERNAL_SERVER_ERROR
+  );
+}
+}
+
+async findAllOrm():Promise<Estudiante[]>{
     return await this.estudianteRepository.find();
 }
 
 //`This action returns a #${id} estudiante`
 
-async findById(id :number) : Promise<Estudiante> {
+async findById(id :number) : Promise<CreateEstudianteDto> {
   try{
-      const criterio : FindOneOptions = { where: { id:id} };
-      const estudiante : Estudiante = await this.estudianteRepository.findOne( criterio );
-      if(estudiante)
-          return estudiante
-      else  
-          throw new Error('No se encuentra el estudiante');
-  }
-  catch(error){
+    const criterio : FindOneOptions = { where: { id:id} };
+    const estudiante : Estudiante  = await this.estudianteRepository.findOne( criterio );
+    if (estudiante) {
+      const createEstudianteDto: CreateEstudianteDto = {
+        apellidoNombre: estudiante.getapellidoNombre(), 
+        fechaNacimiento: estudiante.getfechaNacimiento(),
+        domicilioEstudiante: estudiante.getDomicilioEstudiantes(),
+        asistencia: estudiante.getAsistencia(),
+        estudianteXclase: estudiante.getEstudianteXclase(),
+      };
+      return createEstudianteDto;
+    } else {
+      throw new Error('No se encuentra el estudiante');
+    }
+  }catch(error){
       throw new HttpException({
           status: HttpStatus.CONFLICT,
           error: 'Error en estudiante find by id - ' + error

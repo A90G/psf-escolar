@@ -14,7 +14,7 @@ export class Ciudad{
     nombre:string;
 
     @OneToMany(() => Escuela, escuela => escuela.ciudad)
-    public escuelas : Escuela[];
+    public escuela : Escuela[];
 
     @OneToMany(() => DomicilioProfesor, domicilioProfesor => domicilioProfesor.ciudad)
     public domicilioProfesor : DomicilioProfesor [];
@@ -24,7 +24,7 @@ export class Ciudad{
 
     constructor(nombre:string, escuela: Escuela[], domicilioProfesor:DomicilioProfesor[], domicilioEstudiante: DomicilioEstudiante){
         this.nombre = nombre;
-        this.escuelas = escuela;
+        this.escuela = escuela;
         this.domicilioProfesor = domicilioProfesor;
         this.domicilioEstudiante = domicilioEstudiante;
     }
@@ -38,10 +38,10 @@ export class Ciudad{
         this.nombre = nombre;
     }
     public getEscuela(): Escuela []{
-        return this.escuelas; 
+        return this.escuela; 
     }
     public setEscuela(escuelas: Escuela[]): void {
-        this.escuelas = escuelas; 
+        this.escuela = escuelas; 
     }
     public getDomicilioProfesor(): DomicilioProfesor [] {
         return this.domicilioProfesor; 

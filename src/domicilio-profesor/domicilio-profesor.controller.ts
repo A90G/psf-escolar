@@ -8,7 +8,7 @@ export class DomicilioProfesorController {
   constructor(private readonly domicilioProfesorService: DomicilioProfesorService) {}
 
   @Get()
-  async getAllRaw():Promise<DomicilioProfesor[]>{
+  async getAllRaw():Promise<CreateDomicilioProfesorDto[]>{
     return await this.domicilioProfesorService.findAllRaw();
   }
 
@@ -18,7 +18,7 @@ export class DomicilioProfesorController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number) : Promise<DomicilioProfesor>{
+  async findOne(@Param('id') id: number) : Promise<CreateDomicilioProfesorDto>{
     return await this.domicilioProfesorService.findById(id);
   }
 

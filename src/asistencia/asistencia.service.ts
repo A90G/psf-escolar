@@ -2,7 +2,6 @@ import { CreateAsistenciaDto } from './dto/create-asistencia.dto';
 import { Asistencia } from './entities/asistencia.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Estudiante } from 'src/estudiante/entities/estudiante.entity';
 import { Repository , FindOneOptions } from 'typeorm';
 
 
@@ -34,24 +33,47 @@ export class AsistenciaService {
   }
 
     // return `This action returns all Asistencia`
-    async findAllRaw():Promise<Asistencia[]>{
-      this.asistencia = [];
-      let datos = await this.asistenciaRepository.query("select * from asistencia");
+    async findAllRaw():Promise<CreateAsistenciaDto[]>{
+  //     this.asistencia = [];
+  //     let datos = await this.asistenciaRepository.query("select * from asistencia");
 
-      datos.forEach(element => {
-          let asistencia : Asistencia = new Asistencia(element.fecha, element.clase, element.estudiante);
-          this.asistencia.push(asistencia)
-      });
+  //     datos.forEach(element => {
+  //         let asistencia : CreateAsistenciaDto = new CreateAsistenciaDto[(element.fecha, element.clase, element.estudiante)];
+  //         this.asistencia.push(asistencia)
+  //     });
 
-      return this.asistencia;
+  //     return this.asistencia;
+  // }
+  try {
+    const datos = await this.asistenciaRepository.query("select * from asistencia");
+    const asistenciasDto: CreateAsistenciaDto[] = [];
+  for (const element of datos) {
+    const asistencia: CreateAsistenciaDto = {
+      fecha: element.fecha,
+      clases: element.clase,
+      estudiante: element.estudiante,
+    };
+    asistenciasDto.push(asistencia);
   }
 
-  async findAllOrm():Promise<Asistencia[]>{
+  return asistenciasDto;
+} catch (error) {
+  throw new HttpException(
+    {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      error: 'Error en findAllRaw - ' + error,
+    },
+    HttpStatus.INTERNAL_SERVER_ERROR
+  );
+}
+}
+
+  async findAllOrm():Promise<CreateAsistenciaDto[]>{
     return await this.asistenciaRepository.find();
 }
 
 //`This action returns a #${id} Asistencia`
-async findById(claseId: number, estudianteId: number): Promise<Asistencia> {
+async findById(claseId: number, estudianteId: number): Promise<CreateAsistenciaDto> {
     try {
       const criterio: FindOneOptions = {
         where: {
@@ -60,7 +82,7 @@ async findById(claseId: number, estudianteId: number): Promise<Asistencia> {
         },
       };
   
-      const asistencia: Asistencia = await this.asistenciaRepository.findOne(criterio);
+      const asistencia: CreateAsistenciaDto = await this.asistenciaRepository.findOne(criterio);
  
       if(asistencia)
           return asistencia
