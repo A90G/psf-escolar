@@ -11,6 +11,8 @@ import { DomicilioEstudianteModule } from './domicilio-estudiante/domicilio-estu
 import { EstudianteModule } from './estudiante/estudiante.module';
 import { EstudianteXclaseModule } from './estudiante-xclase/estudiante-xclase.module';
 import { AsistenciaModule } from './asistencia/asistencia.module';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -25,7 +27,7 @@ import { AsistenciaModule } from './asistencia/asistencia.module';
 
   }),    
     ProfesorModule, 
-    CiudadModule, DomicilioProfesorModule, EscuelaModule, ClaseModule, DomicilioEstudianteModule, EstudianteModule, EstudianteXclaseModule, AsistenciaModule],
+    CiudadModule, DomicilioProfesorModule, EscuelaModule, ClaseModule, DomicilioEstudianteModule, EstudianteModule, EstudianteXclaseModule, AsistenciaModule, UserModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
