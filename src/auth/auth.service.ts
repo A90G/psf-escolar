@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from 'src/user/user.service'; 
+import { RegisterDto } from './dto/register.dto';
+import { User } from 'src/user/entities/user.entity'; 
+import * as bcrypt from 'bcrypt'
+import { LoginDto } from './dto/login.dto';
+
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+  constructor(private userServise:UserService,
+              private jwtService:JwtService
+              ){}
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+async register(registerDto:RegisterDto){
+    const user = await this.userServise.findOneByEmail(registerDto.email)
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  if(user){
+    throw new BadRequestException('El usuario ya existe')
   }
+  const pass_encryptada = await bcrypt.hash(registerDto.password,10)
+  return await this.userServise.create(new User(registerDto.email,pass_encryptada,registerDto.username))
+}
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+async login({email,password}:LoginDto){
+  //buscar el usuario ingresado
+  const user = await this.userServise.findOneByEmail(email);
+  //compruebo si el usuario existe
+  if(!user)
+    throw new UnauthorizedException('usuario incorrecto');
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
+  //compara el password del usuario existente con el ingresado por el cliente
+  const isPasswordValid = await bcrypt.compare(password,user.password);
+  if(!isPasswordValid)
+    throw new UnauthorizedException('password incorrecto');
+  
+  const payload = {email: user.email}
+
+  //creo el token
+  const token = await this.jwtService.signAsync(payload);
+
+  return token;
+
+}
+
+
+
 }
