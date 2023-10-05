@@ -20,7 +20,7 @@ async register(registerDto:RegisterDto){
     throw new BadRequestException('El usuario ya existe')
   }
   const pass_encryptada = await bcrypt.hash(registerDto.password,10)
-  return await this.userServise.create(new User(registerDto.email,pass_encryptada,registerDto.username))
+  return await this.userServise.create(new User(registerDto.email,pass_encryptada,registerDto.username)) // acá una variante es usar el user module. create?
 }
 
 async login({email,password}:LoginDto){

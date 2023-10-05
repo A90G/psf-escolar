@@ -14,7 +14,7 @@ export class Escuela {
     @Column()
     private    domicilio : string;
 
-    @ManyToOne(() => Ciudad, ciudad => ciudad.escuelas)
+    @ManyToOne(() => Ciudad, ciudad => ciudad.escuela)
     @JoinColumn({name:"id_ciudad" })
     public ciudad : Ciudad;
 
